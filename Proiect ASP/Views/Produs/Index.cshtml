@@ -5,6 +5,31 @@
 
 <h2>Lista completa de produse</h2>
 <br />
+<form action="/Produs/IndexSorted">
+
+    <label for="sortCrit">Sortați după:</label>
+    <select id="sortCrit" name="sortCrit">
+        <option value="tc">titlu crescator</option>
+        <option value="tdc">titlu descrescator</option>
+        <option value="pc">pret crescator</option>
+        <option value="pdc">pret descrescator</option>
+        <option value="dc">data adaugarii crescator</option>
+        <option value="ddc">data adaugarii descrescator</option>
+    </select>
+    <br />
+    <br />
+    <label>Selectați intervalul de preț:</label>
+    <input type="number" name="pretMin" value="@ViewBag.pretMin" />
+    <input type="number" name="pretMax" value="@ViewBag.pretMax" />
+    <br />
+    <label>Selectați intervalul datei de adaugare:</label>
+    <input type="date" name="dataMin" value="@ViewBag.dataMin.ToString("yyyy-MM-dd")" />
+    <input type="date" name="dataMax" value="@ViewBag.dataMax.ToString("yyyy-MM-dd")" />
+    <br />
+    <br />
+    <button type="submit">Aplica preferintele</button>
+</form>
+
 <hr />
 
 @foreach (var prod in ViewBag.produse)

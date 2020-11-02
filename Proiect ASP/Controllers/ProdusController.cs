@@ -1,6 +1,7 @@
 ﻿using Proiect_ASP.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -17,9 +18,51 @@ namespace Proiect_ASP.Controllers
             var produse = from p in db.Produse
                           select p;
 
+            // pentru a afisa intervalele default de filtre
+            int pretMax = produse.Max(produs => produs.pret);
+            int pretMin = produse.Min(produs => produs.pret);
+
+            DateTime dataMax = produse.Max(produs => produs.dataAdaugare);
+            DateTime dataMin = produse.Min(produs => produs.dataAdaugare);
+
             ViewBag.produse = produse;
 
+            ViewBag.pretMax = pretMax;
+            ViewBag.pretMin = pretMin;
+
+            ViewBag.dataMax = dataMax;
+            ViewBag.dataMin = dataMin;
+
             return View();
+        }
+
+        // GET: Lista produse sortate
+        public ActionResult IndexSorted(string sortCrit, int pretMin, int pretMax, DateTime dataMin, DateTime dataMax)
+        {
+            System.Diagnostics.Debug.WriteLine(dataMin);
+            System.Diagnostics.Debug.WriteLine(dataMax);
+
+            var produse = from p in db.Produse
+                          where p.pret >= pretMin && p.pret <= pretMax
+                          //where p.dataAdaugare >= dataMin && p.dataAdaugare
+                          select p;
+
+            if (sortCrit == "tc")
+                produse = produse.OrderBy(produs => produs.titlu);
+            else if (sortCrit == "tdc")
+                produse = produse.OrderByDescending(produs => produs.titlu);
+            else if (sortCrit == "pc")
+                produse = produse.OrderBy(produs => produs.pret);
+            else if (sortCrit == "pdc")
+                produse = produse.OrderByDescending(produs => produs.pret);
+            else if (sortCrit == "dc")
+                produse = produse.OrderBy(produs => produs.dataAdaugare);
+            else if (sortCrit == "ddc")
+                produse = produse.OrderByDescending(produs => produs.dataAdaugare);
+
+            ViewBag.produse = produse;
+
+            return View("Index");
         }
 
         // GET: Afisarea unui produs (si a categoriilor asociate)
