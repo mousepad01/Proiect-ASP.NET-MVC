@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Lista completa de produse</h2>
+<br />
+<hr />
+
+@foreach (var prod in ViewBag.produse)
+{
+    <p>@prod.titlu</p>
+    <p>Id producator : @prod.idOwner</p>
+    <p>@prod.pret</p>
+
+    <br />
+    <a href="/Produs/Afisare/@prod.idProdus">Afiseaza produs</a>
+    <br />
+    <hr />
+}
+<br />
+<a href="/Produs/Adaugare">Adauga un nou produs</a>
+<br />
+<hr />
+<a href="/Categorie/Index">Afiseaza lista de categorii</a>
+

@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "FormEditare";
+}
+
+<h2>Editeaza categoria (functionalitate la ca re ar trebui sa aiba acces doar adminii):</h2>
+
+<form method="post" action="/Categorie/Editare/@ViewBag.categorie.idCategorie">
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+
+    <label>Titlu</label>
+    <input type="text" name="titlu" value="@ViewBag.categorie.titlu"/>
+    <br />
+    <label>Id @ViewBag.categorie.idCategorie (fixat)</label>
+    <br />
+    <label>Descriere</label>
+    <input type="text" name="descriere" value="@ViewBag.categorie.descriere"/>
+    <br />
+    <button type="submit">Salveaza modificarile</button>
+</form>
+

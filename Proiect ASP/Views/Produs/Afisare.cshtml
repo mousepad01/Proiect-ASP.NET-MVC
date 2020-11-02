@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Afisare";
+}
+
+<h2>@ViewBag.produs.titlu</h2>
+@foreach (var categ in ViewBag.categorii)
+{   
+    <a href="/Categorie/Afisare/@categ.idCategorie">@categ.titlu</a>
+}
+<br />
+<hr />
+<p>Producator: @ViewBag.produs.idOwner</p>
+<p>@ViewBag.produs.pret</p>
+<p>Bucati disponibile: @ViewBag.produs.cantitate</p>
+<p>@ViewBag.produs.descriere</p>
+<small>Adaugat la data de: @ViewBag.produs.dataAdaugare</small>
+<br />
+<br />
+<a href="/Produs/Editare/@ViewBag.produs.idProdus">Editeaza acest produs</a>
+<br />
+<br />
+<form method="post" action="/Produs/Stergere/@ViewBag.produs.idProdus">
+    @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+    <button type="submit">Sterge permanent acest produs</button>
+</form>
+
+
+

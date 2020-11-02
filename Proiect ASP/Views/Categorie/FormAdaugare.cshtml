@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "FormAdaugare";
+}
+
+<h2>Adauga o noua categorie (aceasta functionalitate ar trebui sa fie disponibila doar utilizatorilor admin)</h2>
+<br />
+<form method="post" action="/Categorie/Adaugare">
+
+    <label>Titlu</label>
+    <input type="text" name="titlu"/>
+    <br />
+    <label>Descriere</label>
+    <input type="text" name="descriere" />
+    <br />
+    <button type="submit">Adauga noua categorie</button>
+
+</form>
+

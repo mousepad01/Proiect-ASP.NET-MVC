@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "FormAdaugare";
+}
+
+<h2>Adauga un nou produs (functionalitatea ar trebui sa fie disponibila doar utilizatorilor colaboratori)</h2>
+<br />
+<form method="post" action="/Produs/Adaugare">
+
+    <label>Titlu</label>
+    <input type="text" name="titlu"/>
+    <br />
+    <label>Categorii</label>
+    <input type="text" name="StrCategorii" />
+    <br />
+    <label>Descriere</label>
+    <input type="text" name="descriere"/>
+    <br />
+    <label>Pret</label>
+    <input type="number" name="pret"/>
+    <br />
+    <label>Cantitate</label>
+    <input type="number" name="cantitate"/>
+    <br />
+    <label>Id owner</label>
+    <input type="number" name="idOwner"/>
+    <br />
+    <button type="submit">Adauga noul produs</button>
+
+</form>
+
