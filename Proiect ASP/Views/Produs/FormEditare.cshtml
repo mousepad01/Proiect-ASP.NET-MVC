@@ -29,9 +29,18 @@
 <form method="post" action="/Produs/ModificaCategoriiAsociate/@ViewBag.produs.idProdus">
     @Html.HttpMethodOverride(HttpVerbs.Delete)
 
-    <label>Categorii</label>
-    <input type="text" name="strCategorii" value="@ViewBag.strCategorii" />
-    <br />
+    <select name="categoriiActualizateId" multiple>
+
+        @foreach (var categ in ViewBag.categoriiAsociate)
+        {
+            <option value="@categ.idCategorie" selected>@categ.titlu</option>
+        }
+        @foreach (var categ in ViewBag.categoriiNeasociate)
+        {
+            <option value="@categ.idCategorie">@categ.titlu</option>
+        }
+
+    </select>
     <button type="submit">Modifica categoriile</button>
 
 </form>

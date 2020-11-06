@@ -10,9 +10,14 @@
     <label>Titlu</label>
     <input type="text" name="titlu"/>
     <br />
-    <label>Categorii</label>
-    <input type="text" name="StrCategorii" />
-    <br />
+    <select name="categoriiDeAdaugatId" multiple>
+
+        @foreach(var categ in ViewBag.categorii)
+        {
+            <option value="@categ.idCategorie">@categ.titlu</option>
+        }
+
+    </select>
     <label>Descriere</label>
     <input type="text" name="descriere"/>
     <br />
