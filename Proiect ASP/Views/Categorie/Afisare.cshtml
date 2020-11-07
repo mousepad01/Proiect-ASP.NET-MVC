@@ -5,27 +5,42 @@
 
 <h2>@ViewBag.categorie.titlu</h2>
 
-<p>Descriere: @ViewBag.categorie.descriere</p>
-<br />
-<a href="/Categorie/Editare/@ViewBag.categorie.idCategorie">Editeaza aceasta categorie</a>
-<br />
-<br />
-<form method="post" action="/Categorie/Stergere/@ViewBag.categorie.idCategorie">
-    @Html.HttpMethodOverride(HttpVerbs.Delete)
+<div class="panel panel-default">
+    <div class="panel-body">
+        Descriere: @ViewBag.categorie.descriere
+        <br />
+    </div>
+    <div class="panel panel-footer">
+        <a class="btn btn-info" href="/Categorie/Editare/@ViewBag.categorie.idCategorie" role="button">Editează aceasta categorie</a>
+        <br />
+        <br />
+        <form method="post" action="/Categorie/Stergere/@ViewBag.categorie.idCategorie">
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+            <button class="btn btn-danger" type="submit">Șterge permanent aceasta categorie</button>
+            <br />
+        </form>
+    </div>
+</div>
 
-    <button type="submit">Sterge permanent aceasta categorie</button>
-    <p>!!! NOTA: La stergerea unei categorii, se vor sterge permanent si automat toate produsele asociate !!!</p>
-    <br />
-</form>
-<br />
-<br />
-<p>Lista produselor incluse in aceasta categorie:</p>
-<hr />
+<h3>Produse din această categorie:</h3>
 @foreach (var prod in ViewBag.produse)
-{   
-    <a href="/Produs/Afisare/@prod.idProdus">@prod.titlu</a>
-    <p>Id producator: @prod.idOwner</p>
-    <p>@prod.pret</p>
-    <p>@prod.descriere</p>
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/Produs/Afisare/@prod.idProdus">@prod.titlu</a>
+        </div>
+        <div class="panel-body">
+            <i class="glyphicon glyphicon-user"></i> Producător: @prod.idOwner
+            <br />
+            <i class="glyphicon glyphicon-tag"></i> @prod.pret
+            <br />
+            @prod.descriere
+            <br />
+        </div>
+        <div class="panel panel-footer">
+            <a class="btn btn-primary" href="/Produs/Afisare/@prod.idProdus" role="button">Afișare produs</a>
+            <br />
+        </div>
+    </div>
     <hr />
 }

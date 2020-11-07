@@ -1,35 +1,44 @@
-﻿
+
 @{
     ViewBag.Title = "FormEditare";
 }
 
-<h2>Editeaza produsul (functionalitate la care ar trebui sa aiba acces doar userii colaboratori / adminii?)</h2>
+<h2>Editează produsul (functionalitate la care ar trebui sa aiba acces doar userii colaboratori / adminii?)</h2>
 
 <form method="post" action="/Produs/Editare/@ViewBag.produs.idProdus">
     @Html.HttpMethodOverride(HttpVerbs.Put)
 
-    <label>Titlu</label>
-    <input type="text" name="titlu" value="@ViewBag.produs.titlu" />
+    <div class="form-group">
+        <label>Titlu</label>
+        <input class="form-control" type="text" name="titlu" value="@ViewBag.produs.titlu" />
+    </div>
     <br />
-    <label>Descriere</label>
-    <input type="text" name="descriere" value="@ViewBag.produs.descriere" />
+    <div class="form-group">
+        <label>Descriere</label>
+        <input class="form-control" type="text" name="descriere" value="@ViewBag.produs.descriere" />
+    </div>
     <br />
-    <label>Pret</label>
-    <input type="number" name="pret" value="@ViewBag.produs.pret" />
+    <div class="form-group">
+        <label>Preț</label>
+        <input class="form-control" type="number" name="pret" value="@ViewBag.produs.pret" />
+    </div>
     <br />
-    <label>Cantitate</label>
-    <input type="number" name="cantitate" value="@ViewBag.produs.cantitate" />
+    <div class="form-group">
+        <label>Cantitate</label>
+        <input class="form-control" type="number" name="cantitate" value="@ViewBag.produs.cantitate" />
+    </div>
     <br />
-    <input type="hidden" name="idOwner" value="@ViewBag.produs.idOwner" />
+    <input class="form-control" type="hidden" name="idOwner" value="@ViewBag.produs.idOwner" />
     <br />
-    <button type="submit">Salveaza modificarile</button>
+    <button class="btn btn-success" type="submit">Salveaza modificările</button>
+    <br />
     <hr />
 </form>
 <br />
 <form method="post" action="/Produs/ModificaCategoriiAsociate/@ViewBag.produs.idProdus">
     @Html.HttpMethodOverride(HttpVerbs.Delete)
 
-    <select name="categoriiActualizateId" multiple>
+    <select class="form-control" name="categoriiActualizateId" multiple>
 
         @foreach (var categ in ViewBag.categoriiAsociate)
         {
@@ -41,7 +50,9 @@
         }
 
     </select>
-    <button type="submit">Modifica categoriile</button>
+    <br />
+    <br />
+    <button class="btn btn-success" type="submit">Modifică categoriile</button>
 
 </form>
 

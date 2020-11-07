@@ -7,15 +7,19 @@
 
 <form method="post" action="/Categorie/Editare/@ViewBag.categorie.idCategorie">
     @Html.HttpMethodOverride(HttpVerbs.Put)
-
-    <label>Titlu</label>
-    <input type="text" name="titlu" value="@ViewBag.categorie.titlu"/>
+    <div class="form-group">
+        <label>ID Categorie: @ViewBag.categorie.idCategorie</label>
+    </div>
+    <div class="form-group">
+        <label>Titlu</label>
+        <input class="form-control" type="text" name="titlu" value="@ViewBag.categorie.titlu" />
+    </div>
     <br />
-    <label>Id @ViewBag.categorie.idCategorie (fixat)</label>
+    <div class="form-group">
+        <label>Descriere</label>
+        <input class="form-control" type="text" name="descriere" value="@ViewBag.categorie.descriere" />
+    </div>
     <br />
-    <label>Descriere</label>
-    <input type="text" name="descriere" value="@ViewBag.categorie.descriere"/>
-    <br />
-    <button type="submit">Salveaza modificarile</button>
+    <button class="btn btn-success" type="submit">Salvează modificarile</button>
 </form>
 

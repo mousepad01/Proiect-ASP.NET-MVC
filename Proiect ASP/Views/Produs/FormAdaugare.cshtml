@@ -1,4 +1,4 @@
-﻿
+
 @{
     ViewBag.Title = "FormAdaugare";
 }
@@ -7,30 +7,39 @@
 <br />
 <form method="post" action="/Produs/Adaugare">
 
-    <label>Titlu</label>
-    <input type="text" name="titlu"/>
+    <div class="form-group">
+        <label>Titlu</label>
+        <input class="form-control" type="text" name="titlu" />
+    </div>
     <br />
-    <select name="categoriiDeAdaugatId" multiple>
+    <select class="form-control" name="categoriiDeAdaugatId" multiple>
 
-        @foreach(var categ in ViewBag.categorii)
+        @foreach (var categ in ViewBag.categorii)
         {
             <option value="@categ.idCategorie">@categ.titlu</option>
         }
 
     </select>
-    <label>Descriere</label>
-    <input type="text" name="descriere"/>
+    <div class="form-group">
+        <label>Descriere</label>
+        <input class="form-control" type="text" name="descriere" />
+    </div>
     <br />
-    <label>Pret</label>
-    <input type="number" name="pret"/>
+    <div class="form-group">
+        <label>Preț</label>
+        <input class="form-control" type="number" name="pret" />
+    </div>
     <br />
-    <label>Cantitate</label>
-    <input type="number" name="cantitate"/>
+    <div class="form-group">
+        <label>Cantitate</label>
+        <input class="form-control" type="number" name="cantitate" />
+    </div>
     <br />
-    <label>Id owner</label>
-    <input type="number" name="idOwner"/>
+    <div class="form-group">
+        <label>ID Owner</label>
+        <input class="form-control" type="number" name="idOwner" />
+    </div>
     <br />
-    <button type="submit">Adauga noul produs</button>
+    <button class="btn btn-success" type="submit">Adaugă noul produs</button>
 
 </form>
-
