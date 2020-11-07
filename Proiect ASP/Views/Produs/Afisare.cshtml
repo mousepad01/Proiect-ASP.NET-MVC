@@ -13,13 +13,20 @@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        <i class="glyphicon glyphicon-user"></i> Producător: @ViewBag.produs.idOwner
+        <div class="row">
+            <div class="col col-md-4">
+                <i class="glyphicon glyphicon-user"></i> Producător: @ViewBag.produs.idOwner
+            </div>
+            <div class="col col-md-4">
+                <i class="glyphicon glyphicon-tag"></i> Preț: @ViewBag.produs.pret
+            </div>
+            <div class="col col-md-4">
+                <i class="glyphicon glyphicon-question-sign"></i> Cantitate disponibilă: @ViewBag.produs.cantitate
+            </div>
+        </div>
         <br />
         @ViewBag.produs.descriere
         <br />
-        <i class="glyphicon glyphicon-tag"></i> Preț: @ViewBag.produs.pret
-        <br />
-        <i class="glyphicon glyphicon-question-sign"></i> Cantitate disponibilă: @ViewBag.produs.cantitate
         <br />
         <i class="glyphicon glyphicon-calendar"></i> Adăugat la data de: @ViewBag.produs.dataAdaugare
     </div>
