@@ -33,6 +33,9 @@ namespace Proiect_ASP.Controllers
             ViewBag.dataMax = dataMax;
             ViewBag.dataMin = dataMin;
 
+            if (TempData["mesaj"] != null)
+                ViewBag.mesaj = TempData["mesaj"];
+
             return View();
         }
 
@@ -83,6 +86,7 @@ namespace Proiect_ASP.Controllers
             return View();
         }
 
+        /*
         // arunca exceptie daca strCategorii nu are formatul potrivit sau categoria nu exista
         [NonAction]
         public Categorie[] getCategorii(string strCategorii, ref int n_categ)
@@ -131,7 +135,7 @@ namespace Proiect_ASP.Controllers
             }
 
             return listaCategorii;
-        }
+        }*/
 
         // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
         // (se are in vedere ca metoda care o apeleaza sterge vechile categorii de dinainte)
@@ -171,14 +175,26 @@ namespace Proiect_ASP.Controllers
 
         // Prima metoda (a doua fiind AdaugaCategoriiAsociate) 
         // folosita in vederea modificarii categoriilor din care un produs face parte
-        // Aceasta metoda VERIFICA daca noile categorii sunt VALIDE, dupa care STERGE vechile categorii
+        // STERGE vechile categorii
         [HttpDelete]
-        public ActionResult ModificaCategoriiAsociate(int id, string strCategorii)
+        public ActionResult ModificaCategoriiAsociate(int id, int[] categoriiActualizateId)
         {
             try
             {
-                int n_categ = 0;
-                Categorie[] categoriiNoi = getCategorii(strCategorii, ref n_categ);
+                Categorie[] categoriiActualizate = new Categorie[100];
+
+                for(int i = 0; i < categoriiActualizateId.Length; i++)
+                {
+                    //System.Diagnostics.Debug.WriteLine(categoriiActualizateId[i]);
+                    int categId = categoriiActualizateId[i];
+
+                    var categ = from c in db.Categorii
+                                where c.idCategorie == categId
+                                select c;
+
+                    categoriiActualizate[i] = categ.SingleOrDefault();
+                    //System.Diagnostics.Debug.WriteLine(categoriiActualizate[i].titlu);
+                }
 
                 var asocieri = from cp in db.CategoriiProduse
                                where cp.idProdus == id
@@ -189,39 +205,41 @@ namespace Proiect_ASP.Controllers
 
                 db.SaveChanges();
 
-                return AdaugaCategoriiAsociate(id, n_categ, categoriiNoi);
+                return AdaugaCategoriiAsociate(id, categoriiActualizateId.Length, categoriiActualizate);
             }
             catch (Exception e)
             {
                 ViewBag.exceptie = e;
 
-                return View("ExitareNereusita");
+                return View("EditareNereusita");
             }
         }
 
-        //GET: Afisarea form ului pentru editarea unui produs (FARA CATEGORIILE ASOCIATE)
+        //GET: Afisarea form ului pentru editarea unui produs 
         public ActionResult Editare(int id)
         {
             Produs produsDeEditat = db.Produse.Find(id);
 
-            var categorii = from cp in db.CategoriiProduse
-                            from c in db.Categorii
-                            where cp.idProdus == produsDeEditat.idProdus
-                            where cp.idCategorie == c.idCategorie
-                            select c;
+            var categoriiAsociate = from cp in db.CategoriiProduse
+                                    from c in db.Categorii
+                                    where cp.idProdus == produsDeEditat.idProdus
+                                    where cp.idCategorie == c.idCategorie
+                                    select c;
 
-            string strCategorii = "";
+            // delimitez categoriile neasociate de cele asociate
+            var categoriiNeasociate = (from c in db.Categorii
+                                       select c).Except(categoriiAsociate);
 
-            foreach (var categ in categorii)
-                strCategorii += categ.titlu + ", ";
+            ViewBag.categoriiNeasociate = categoriiNeasociate;
 
-            ViewBag.strCategorii = strCategorii;
+            ViewBag.categoriiAsociate = categoriiAsociate;
 
             ViewBag.produs = produsDeEditat;
 
             return View("FormEditare");
         }
 
+        // Editarea informatiilor unui produs FARA CATEGORIILE ASOCIATE
         [HttpPut]
         public ActionResult Editare(int id, string strCategorii, Produs produsActualizat)
         {
@@ -252,27 +270,39 @@ namespace Proiect_ASP.Controllers
 
         //GET: afisarea form ului pentru adaugarea unui produs nou
         public ActionResult Adaugare()
-        {   
+        {
+            var categorii = from c in db.Categorii
+                            select c;
+
+            ViewBag.categorii = categorii;
+
             return View("FormAdaugare");
         }
 
         [HttpPost]
-        public ActionResult Adaugare(Produs produsDeAdaugat, string strCategorii)
-        {
-            //cu ajutorul input ului care are proprietatea name="strCategorii", se va transmite in acest parametru acea valoare
-
+        public ActionResult Adaugare(Produs produsDeAdaugat, int[] categoriiDeAdaugatId)
+        { 
             try
             {
-                int n_categ = 0;
+                Categorie[] categoriiDeAdaugat = new Categorie[100];
 
-                Categorie[] categorii = getCategorii(strCategorii, ref n_categ);
+                for (int i = 0; i < categoriiDeAdaugatId.Length; i++)
+                {
+                    int categId = categoriiDeAdaugatId[i];
+
+                    var categ = from c in db.Categorii
+                                where c.idCategorie == categId
+                                select c;
+
+                    categoriiDeAdaugat[i] = categ.SingleOrDefault();
+                }
 
                 produsDeAdaugat.dataAdaugare = DateTime.Now;
 
                 db.Produse.Add(produsDeAdaugat);
 
-                for(int i = 0; i < n_categ; i++)
-                    db.CategoriiProduse.Add(new CategorieProdus { idProdus = produsDeAdaugat.idProdus, idCategorie = categorii[i].idCategorie });
+                for(int i = 0; i < categoriiDeAdaugatId.Length; i++)
+                    db.CategoriiProduse.Add(new CategorieProdus { idProdus = produsDeAdaugat.idProdus, idCategorie = categoriiDeAdaugat[i].idCategorie });
 
                 db.SaveChanges();
 
@@ -295,6 +325,8 @@ namespace Proiect_ASP.Controllers
                 db.Produse.Remove(produsDeSters);
 
                 db.SaveChanges();
+
+                TempData["mesaj"] = "Produsul a fost eliminat cu scces!";
 
                 return RedirectToAction("Index");
             }
