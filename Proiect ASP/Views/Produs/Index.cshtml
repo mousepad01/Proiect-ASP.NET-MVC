@@ -4,48 +4,71 @@
 }
 
 <h2>Lista completa de produse</h2>
-<br />
-<form action="/Produs/IndexSorted">
 
-    <label for="sortCrit">Sortați după:</label>
-    <select id="sortCrit" name="sortCrit">
-        <option value="tc">titlu crescator</option>
-        <option value="tdc">titlu descrescator</option>
-        <option value="pc">pret crescator</option>
-        <option value="pdc">pret descrescator</option>
-        <option value="dc">data adaugarii crescator</option>
-        <option value="ddc">data adaugarii descrescator</option>
-    </select>
-    <br />
-    <br />
-    <label>Selectați intervalul de preț:</label>
-    <input type="number" name="pretMin" value="@ViewBag.pretMin" />
-    <input type="number" name="pretMax" value="@ViewBag.pretMax" />
-    <br />
-    <label>Selectați intervalul datei de adaugare:</label>
-    <input type="date" name="dataMin" value="@ViewBag.dataMin.ToString("yyyy-MM-dd")" />
-    <input type="date" name="dataMax" value="@ViewBag.dataMax.ToString("yyyy-MM-dd")" />
-    <br />
-    <br />
-    <button type="submit">Aplica preferintele</button>
-</form>
+<br />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col col-3 col-md-3">
+            <div class="affix">
+                <form action="/Produs/IndexSorted">
+
+                    <label for="sortCrit">Sortați după:</label>
+                    <div class="form-group">
+                        <select class="form-control" id="sortCrit" name="sortCrit">
+                            <option value="tc">Titlu crescător</option>
+                            <option value="tdc">Titlu descrescător</option>
+                            <option value="pc">Preț crescător</option>
+                            <option value="pdc">Preț descrescător</option>
+                            <option value="dc">Data adăugării crescător</option>
+                            <option value="ddc">Data adăugării descrescător</option>
+                        </select>
+                    </div>
+
+                    <br />
+                    <div class="form-group">
+                        <label>Selectați intervalul de preț:</label>
+                        <input class="form-control" type="number" name="pretMin" min="@ViewBag.pretMin" max="@ViewBag.pretMax" value="@ViewBag.pretMin" />
+                        <input class="form-control" type="number" name="pretMax" min="@ViewBag.pretMin" max="@ViewBag.pretMax" value="@ViewBag.pretMax" />
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label>Selectați intervalul datei de adaugare:</label>
+                        <input class="form-control" type="date" name="dataMin" value="@ViewBag.dataMin.ToString("yyyy-MM-dd")" />
+                        <input class="form-control" type="date" name="dataMax" value="@ViewBag.dataMax.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <br />
+                    <button class="btn btn-primary" type="submit">Aplica preferintele</button>
+                    <br />
+                    <br />
+                    <a class="btn btn-success" href="/Produs/Adaugare" role="button">Adaugă un nou produs</a>
+                    <br />
+                    <br />
+                    <a class="btn btn-info" href="/Categorie/Index" role="button">Afișează lista de categorii</a>
+                </form>
+                </div>
+            </div>
+            <div class="col col-9 col-md-9">
+                @foreach (var prod in ViewBag.produse)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @prod.titlu
+                        </div>
+                        <div class="panel-body">
+                            <i class="glyphicon glyphicon-user"></i> Producător: @prod.idOwner
+                            <br />
+                            <i class="glyphicon glyphicon-tag"></i> @prod.pret
+                            <br />
+                        </div>
+                        <div class="panel panel-footer">
+                            <a class="btn btn-primary" href="/Produs/Afisare/@prod.idProdus">Afișare produs</a>
+                            <br />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+</div>
 
 <hr />
-
-@foreach (var prod in ViewBag.produse)
-{
-    <p>@prod.titlu</p>
-    <p>Id producator : @prod.idOwner</p>
-    <p>@prod.pret</p>
-
-    <br />
-    <a href="/Produs/Afisare/@prod.idProdus">Afiseaza produs</a>
-    <br />
-    <hr />
-}
-<br />
-<a href="/Produs/Adaugare">Adauga un nou produs</a>
-<br />
-<hr />
-<a href="/Categorie/Index">Afiseaza lista de categorii</a>
 

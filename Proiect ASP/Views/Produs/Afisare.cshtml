@@ -10,21 +10,31 @@
 }
 <br />
 <hr />
-<p>Producator: @ViewBag.produs.idOwner</p>
-<p>@ViewBag.produs.pret</p>
-<p>Bucati disponibile: @ViewBag.produs.cantitate</p>
-<p>@ViewBag.produs.descriere</p>
-<small>Adaugat la data de: @ViewBag.produs.dataAdaugare</small>
-<br />
-<br />
-<a href="/Produs/Editare/@ViewBag.produs.idProdus">Editeaza acest produs</a>
-<br />
-<br />
-<form method="post" action="/Produs/Stergere/@ViewBag.produs.idProdus">
-    @Html.HttpMethodOverride(HttpVerbs.Delete)
 
-    <button type="submit">Sterge permanent acest produs</button>
-</form>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <i class="glyphicon glyphicon-user"></i> Producător: @ViewBag.produs.idOwner
+        <br />
+        @ViewBag.produs.descriere
+        <br />
+        <i class="glyphicon glyphicon-tag"></i> Preț: @ViewBag.produs.pret
+        <br />
+        <i class="glyphicon glyphicon-question-sign"></i> Cantitate disponibilă: @ViewBag.produs.cantitate
+        <br />
+        <i class="glyphicon glyphicon-calendar"></i> Adăugat la data de: @ViewBag.produs.dataAdaugare
+    </div>
+    <div class="panel panel-footer">
+        <form method="post" action="/Produs/Stergere/@ViewBag.produs.idProdus">
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+            <button class="btn btn-danger" type="submit">Șterge permanent acest produs</button>
+        </form>
+        <br />
+        <a class="btn btn-info" href="/Produs/Editare/@ViewBag.produs.idProdus" role="button">Editează acest produs</a>
+    </div>
+</div>
+
+
 
 
 

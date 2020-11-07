@@ -8,14 +8,21 @@
 
 @foreach (var categ in ViewBag.categorii)
 {
-    <p>@categ.titlu</p>
-    <p>@categ.idCategorie</p>
-
-    <a href="/Categorie/Afisare/@categ.idCategorie">Afiseaza categoria</a>
-    <hr />
-
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @categ.titlu
+        </div>
+        <div class="panel-body">
+            <i class="glyphicon glyphicon-user"></i> ID Categorie: @categ.idCategorie
+            <br />
+        </div>
+        <div class="panel panel-footer">
+            <a class="btn btn-primary" href="/Categorie/Afisare/@categ.idCategorie">Afișează categoria</a>
+            <br />
+        </div>
+    </div>
 }
+
 <br />
-<a href="/Categorie/Adaugare">Adauga o noua categorie</a>
-<br />
-<a href="/Produs/Index">Inapoi la lista de produse</a>
+<a class="btn btn-success" href="/Categorie/Adaugare" role="button">Adaugă o noua categorie</a>
+<a class="btn btn-info" href="/Produs/Index" role="button">Înapoi la lista de produse</a>
