@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col col-3 col-md-3">
             <div class="affix">
-                <form action="/Produs/IndexSorted">
+                <form action="/Produs/IndexSorted" method="post">
                     <label for="sortCrit">Sortați după:</label>
                     <div class="form-group">
                         <select class="form-control" id="sortCrit" name="sortCrit">
@@ -25,14 +25,14 @@
 
                     <br />
                     <div class="form-group">
-                        <input type="checkbox" aria-label="checkbox pentru intervalul de preț">
+                        <input type="checkbox" name="consideraPret" >
                         <label>Selectați intervalul de preț:</label>
                         <input class="form-control" type="number" name="pretMin" min="@ViewBag.pretMin" max="@ViewBag.pretMax" value="@ViewBag.pretMin" />
                         <input class="form-control" type="number" name="pretMax" min="@ViewBag.pretMin" max="@ViewBag.pretMax" value="@ViewBag.pretMax" />
                     </div>
                     <br />
                     <div class="form-group">
-                        <input type="checkbox" aria-label="checkbox pentru intervalul datei de adăugare">
+                        <input type="checkbox" name="consideraData">
                         <label>Selectați intervalul datei de adaugare:</label>
                         <input class="form-control" type="date" name="dataMin" value="@ViewBag.dataMin.ToString("yyyy-MM-dd")" />
                         <input class="form-control" type="date" name="dataMax" value="@ViewBag.dataMax.ToString("yyyy-MM-dd")" />

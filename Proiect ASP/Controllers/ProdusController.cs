@@ -30,6 +30,7 @@ namespace Proiect_ASP.Controllers
             ViewBag.pretMax = pretMax;
             ViewBag.pretMin = pretMin;
 
+
             ViewBag.dataMax = dataMax;
             ViewBag.dataMin = dataMin;
 
@@ -39,31 +40,69 @@ namespace Proiect_ASP.Controllers
             return View();
         }
 
-        // GET: Lista produse sortate
-        public ActionResult IndexSorted(string sortCrit, int pretMin, int pretMax, DateTime dataMin, DateTime dataMax)
+        // POST PENTRU CĂ AȘA VREA FORMCOLLECTION, DAR PUTEA SĂ FIE GET: Lista produse sortate
+        [HttpPost]
+        public ActionResult IndexSorted(FormCollection result)
         {
-            System.Diagnostics.Debug.WriteLine(dataMin);
-            System.Diagnostics.Debug.WriteLine(dataMax);
+            // FormCollection permite form-ului să fie transmis mai fancy și modificat ușor
+            string value = Convert.ToString(result["pretMin"]);
 
+            // Intervalele default din filtre 
             var produse = from p in db.Produse
-                          where p.pret >= pretMin && p.pret <= pretMax
-                          //where p.dataAdaugare >= dataMin && p.dataAdaugare
                           select p;
+            int pretMax = produse.Max(produs => produs.pret);
+            int pretMin = produse.Min(produs => produs.pret);
+            DateTime dataMax = produse.Max(produs => produs.dataAdaugare);
+            DateTime dataMin = produse.Min(produs => produs.dataAdaugare);
+            ViewBag.pretMax = pretMax;
+            ViewBag.pretMin = pretMin;
+            ViewBag.dataMax = dataMax;
+            ViewBag.dataMin = dataMin;
+            
+            int pretMinAux = Convert.ToInt16(result["pretMin"]);
+            int pretMaxAux = Convert.ToInt16(result["pretMax"]);
+            DateTime dataMinAux = Convert.ToDateTime(result["dataMin"]);
+            DateTime dataMaxAux = Convert.ToDateTime(result["dataMax"]);
 
-            if (sortCrit == "tc")
-                produse = produse.OrderBy(produs => produs.titlu);
-            else if (sortCrit == "tdc")
-                produse = produse.OrderByDescending(produs => produs.titlu);
-            else if (sortCrit == "pc")
-                produse = produse.OrderBy(produs => produs.pret);
-            else if (sortCrit == "pdc")
-                produse = produse.OrderByDescending(produs => produs.pret);
-            else if (sortCrit == "dc")
-                produse = produse.OrderBy(produs => produs.dataAdaugare);
-            else if (sortCrit == "ddc")
-                produse = produse.OrderByDescending(produs => produs.dataAdaugare);
+            // O sa ma gandesc eu la niste chestii sa nu arunce o exceptie random daca nu avem vreun pret setat, dar selectam checkbox-ul de pret (idem pentru data)
+            if (result["consideraData"] != null && result["consideraPret"] != null)
+            {
+
+                produse = from p in db.Produse
+                          where p.pret >= pretMinAux && p.pret <= pretMaxAux
+                          where p.dataAdaugare >= dataMinAux && p.dataAdaugare <= dataMaxAux
+                          select p;
+            }
+            else if (result["consideraData"] != null)
+            {
+                produse = from p in db.Produse
+                          where p.dataAdaugare >= dataMinAux && p.dataAdaugare <= dataMaxAux
+                          select p;
+            }
+            else if (result["consideraPret"] != null)
+            {
+                produse = from p in db.Produse
+                          where p.pret >= pretMinAux && p.pret <= pretMaxAux
+                          select p;
+            }
 
             ViewBag.produse = produse;
+
+            if (result["sortCrit"] == "tc")
+                produse = produse.OrderBy(produs => produs.titlu);
+            else if (result["sortCrit"] == "tdc")
+                produse = produse.OrderByDescending(produs => produs.titlu);
+            else if (result["sortCrit"] == "pc")
+                produse = produse.OrderBy(produs => produs.pret);
+            else if (result["sortCrit"] == "pdc")
+                produse = produse.OrderByDescending(produs => produs.pret);
+            else if (result["sortCrit"] == "dc")
+                produse = produse.OrderBy(produs => produs.dataAdaugare);
+            else if (result["sortCrit"] == "ddc")
+                produse = produse.OrderByDescending(produs => produs.dataAdaugare);
+
+            if (TempData["mesaj"] != null)
+                ViewBag.mesaj = TempData["mesaj"];
 
             return View("Index");
         }
@@ -86,6 +125,8 @@ namespace Proiect_ASP.Controllers
             return View();
         }
 
+
+        // Dle. Proteina, cand va angajati sa cereti salariul direct proportional cu nr. de linii scrise =))))
         /*
         // arunca exceptie daca strCategorii nu are formatul potrivit sau categoria nu exista
         [NonAction]
@@ -137,13 +178,13 @@ namespace Proiect_ASP.Controllers
             return listaCategorii;
         }*/
 
-        // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
-        // (se are in vedere ca metoda care o apeleaza sterge vechile categorii de dinainte)
-        //
-        // Am ales sa implementez asa deoarece ar fi existat situatii cand trebuia sa sterg vechile categorii
-        // Si in acelasi timp sa adaug altele noi, deci in cel mai rau caz oricum aveam de apelat doua metode
-        // Pentru a simplifica implementarea, le apelez de fiecare data, 
-        // Renuntand la ideea de a imparti situatia in mai multe cazuri
+            // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
+            // (se are in vedere ca metoda care o apeleaza sterge vechile categorii de dinainte)
+            //
+            // Am ales sa implementez asa deoarece ar fi existat situatii cand trebuia sa sterg vechile categorii
+            // Si in acelasi timp sa adaug altele noi, deci in cel mai rau caz oricum aveam de apelat doua metode
+            // Pentru a simplifica implementarea, le apelez de fiecare data, 
+            // Renuntand la ideea de a imparti situatia in mai multe cazuri
         [NonAction]
         public ActionResult AdaugaCategoriiAsociate(int id, int n_categ, Categorie[] categoriiDeAdaugat)
         {   
