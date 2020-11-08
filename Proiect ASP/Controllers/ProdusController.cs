@@ -45,7 +45,6 @@ namespace Proiect_ASP.Controllers
         public ActionResult IndexSorted(FormCollection result)
         {
             // FormCollection permite form-ului să fie transmis mai fancy și modificat ușor
-            string value = Convert.ToString(result["pretMin"]);
 
             // Intervalele default din filtre 
             var produse = from p in db.Produse
@@ -67,7 +66,6 @@ namespace Proiect_ASP.Controllers
             // O sa ma gandesc eu la niste chestii sa nu arunce o exceptie random daca nu avem vreun pret setat, dar selectam checkbox-ul de pret (idem pentru data)
             if (result["consideraData"] != null && result["consideraPret"] != null)
             {
-
                 produse = from p in db.Produse
                           where p.pret >= pretMinAux && p.pret <= pretMaxAux
                           where p.dataAdaugare >= dataMinAux && p.dataAdaugare <= dataMaxAux
@@ -86,11 +84,9 @@ namespace Proiect_ASP.Controllers
                           select p;
             }
 
-            ViewBag.produse = produse;
-
             if (result["sortCrit"] == "tc")
                 produse = produse.OrderBy(produs => produs.titlu);
-            else if (result["sortCrit"] == "tdc")
+            else if (result["sortCrit"] == "tdc")  
                 produse = produse.OrderByDescending(produs => produs.titlu);
             else if (result["sortCrit"] == "pc")
                 produse = produse.OrderBy(produs => produs.pret);
@@ -101,8 +97,7 @@ namespace Proiect_ASP.Controllers
             else if (result["sortCrit"] == "ddc")
                 produse = produse.OrderByDescending(produs => produs.dataAdaugare);
 
-            if (TempData["mesaj"] != null)
-                ViewBag.mesaj = TempData["mesaj"];
+            ViewBag.produse = produse;
 
             return View("Index");
         }
