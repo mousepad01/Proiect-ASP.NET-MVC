@@ -12,7 +12,7 @@ namespace Proiect_ASP.Controllers
     {
         private Models.AppContext db = new Models.AppContext();
 
-        // GET: Lista produse
+        // GET: Lista produses
         public ActionResult Index()
         {
             var produse = from p in db.Produse
@@ -30,9 +30,16 @@ namespace Proiect_ASP.Controllers
             ViewBag.pretMax = pretMax;
             ViewBag.pretMin = pretMin;
 
+            ViewBag.pretMinDefault = pretMin;
+            ViewBag.pretMaxDefault = pretMax;
 
             ViewBag.dataMax = dataMax;
             ViewBag.dataMin = dataMin;
+
+            ViewBag.dataMaxDefault = dataMax;
+            ViewBag.dataMinDefault = dataMin;
+
+            ViewBag.selectedSort = "none";
 
             if (TempData["mesaj"] != null)
                 ViewBag.mesaj = TempData["mesaj"];
@@ -49,53 +56,50 @@ namespace Proiect_ASP.Controllers
             // Intervalele default din filtre 
             var produse = from p in db.Produse
                           select p;
+
             int pretMax = produse.Max(produs => produs.pret);
             int pretMin = produse.Min(produs => produs.pret);
+
             DateTime dataMax = produse.Max(produs => produs.dataAdaugare);
             DateTime dataMin = produse.Min(produs => produs.dataAdaugare);
+
             ViewBag.pretMax = pretMax;
             ViewBag.pretMin = pretMin;
             ViewBag.dataMax = dataMax;
             ViewBag.dataMin = dataMin;
-            
-            int pretMinAux = Convert.ToInt16(result["pretMin"]);
-            int pretMaxAux = Convert.ToInt16(result["pretMax"]);
+
+            int pretMinAux = Convert.ToInt32(result["pretMin"]);
+            int pretMaxAux = Convert.ToInt32(result["pretMax"]);
             DateTime dataMinAux = Convert.ToDateTime(result["dataMin"]);
             DateTime dataMaxAux = Convert.ToDateTime(result["dataMax"]);
 
-            // O sa ma gandesc eu la niste chestii sa nu arunce o exceptie random daca nu avem vreun pret setat, dar selectam checkbox-ul de pret (idem pentru data)
-            if (result["consideraData"] != null && result["consideraPret"] != null)
-            {
-                produse = from p in db.Produse
-                          where p.pret >= pretMinAux && p.pret <= pretMaxAux
-                          where p.dataAdaugare >= dataMinAux && p.dataAdaugare <= dataMaxAux
-                          select p;
-            }
-            else if (result["consideraData"] != null)
-            {
-                produse = from p in db.Produse
-                          where p.dataAdaugare >= dataMinAux && p.dataAdaugare <= dataMaxAux
-                          select p;
-            }
-            else if (result["consideraPret"] != null)
-            {
-                produse = from p in db.Produse
-                          where p.pret >= pretMinAux && p.pret <= pretMaxAux
-                          select p;
-            }
+            ViewBag.pretMinDefault = pretMinAux;
+            ViewBag.pretMaxDefault = pretMaxAux;
 
-            if (result["sortCrit"] == "tc")
+            ViewBag.dataMaxDefault = dataMaxAux;
+            ViewBag.dataMinDefault = dataMinAux;
+
+            produse = from p in db.Produse
+                        where p.pret >= pretMinAux && p.pret <= pretMaxAux
+                        where p.dataAdaugare >= dataMinAux && p.dataAdaugare <= dataMaxAux
+                        select p;
+
+            string sortCrit = result["sortCrit"];
+
+            if (sortCrit == "tc")
                 produse = produse.OrderBy(produs => produs.titlu);
-            else if (result["sortCrit"] == "tdc")  
+            else if (sortCrit == "tdc")
                 produse = produse.OrderByDescending(produs => produs.titlu);
-            else if (result["sortCrit"] == "pc")
+            else if (sortCrit == "pc")
                 produse = produse.OrderBy(produs => produs.pret);
-            else if (result["sortCrit"] == "pdc")
+            else if (sortCrit == "pdc")
                 produse = produse.OrderByDescending(produs => produs.pret);
-            else if (result["sortCrit"] == "dc")
+            else if (sortCrit == "dc")
                 produse = produse.OrderBy(produs => produs.dataAdaugare);
-            else if (result["sortCrit"] == "ddc")
+            else if (sortCrit == "ddc")
                 produse = produse.OrderByDescending(produs => produs.dataAdaugare);
+
+            ViewBag.selectedSort = sortCrit;
 
             ViewBag.produse = produse;
 
@@ -120,66 +124,13 @@ namespace Proiect_ASP.Controllers
             return View();
         }
 
-
-        // Dle. Proteina, cand va angajati sa cereti salariul direct proportional cu nr. de linii scrise =))))
-        /*
-        // arunca exceptie daca strCategorii nu are formatul potrivit sau categoria nu exista
-        [NonAction]
-        public Categorie[] getCategorii(string strCategorii, ref int n_categ)
-        {
-            // procesez string ul in numele categoriilor, caut numele categoriilor in parte in baza de date pentru
-            // a verifica daca exista, si dupa adaugarea noului obiect, adaug inregistrari noi 
-            // in tabela CategoriiProduse
-
-            string[] numeCategorii = new string[100];
-
-            n_categ = 0;
-            int i = 0;
-
-            while (i < strCategorii.Length)
-            {
-                while (i < strCategorii.Length && strCategorii[i] != ',')
-                {
-                    if (strCategorii[i] != ' ')
-                        numeCategorii[n_categ] += strCategorii[i];
-
-                    i += 1;
-                }
-
-                i += 1;
-                n_categ += 1;
-            }
-
-            Categorie[] listaCategorii = new Categorie[100];
-
-            for (i = 0; i < n_categ; i++)
-            {
-                // daca faceam direct query cu c.titlu == numeCategorii[i] AR FI ARUNCAT EROARE
-                // (nu trebuie sa am referinte in array uri in query uri de tip LINQ)
-                // de asta am nevoie de variabila auxiliata numeCategorie, la prima vedere inutila
-
-                var numeCategorie = numeCategorii[i];
-
-                var categorieAsociata = from c in db.Categorii
-                                        where c.titlu == numeCategorie
-                                        select c;
-
-                if (categorieAsociata != null)
-                    listaCategorii[i] = categorieAsociata.SingleOrDefault();
-                else
-                    throw new ArgumentException("Categories provided in string do not exist", strCategorii);
-            }
-
-            return listaCategorii;
-        }*/
-
-            // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
-            // (se are in vedere ca metoda care o apeleaza sterge vechile categorii de dinainte)
-            //
-            // Am ales sa implementez asa deoarece ar fi existat situatii cand trebuia sa sterg vechile categorii
-            // Si in acelasi timp sa adaug altele noi, deci in cel mai rau caz oricum aveam de apelat doua metode
-            // Pentru a simplifica implementarea, le apelez de fiecare data, 
-            // Renuntand la ideea de a imparti situatia in mai multe cazuri
+        // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
+        // (se are in vedere ca metoda care o apeleaza sterge vechile categorii de dinainte)
+        //
+        // Am ales sa implementez asa deoarece ar fi existat situatii cand trebuia sa sterg vechile categorii
+        // Si in acelasi timp sa adaug altele noi, deci in cel mai rau caz oricum aveam de apelat doua metode
+        // Pentru a simplifica implementarea, le apelez de fiecare data, 
+        // Renuntand la ideea de a imparti situatia in mai multe cazuri
         [NonAction]
         public ActionResult AdaugaCategoriiAsociate(int id, int n_categ, Categorie[] categoriiDeAdaugat)
         {   
