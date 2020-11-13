@@ -7,18 +7,12 @@
 
 <h2>Editează produsul (functionalitate la care ar trebui sa aiba acces doar userii colaboratori / adminii?)</h2>
 
-<form method="post" action="/Produs/Editare/@Model.idProdus">
+<form method="post" action="/Produs/SwitchEditare/@Model.idProdus">
     @Html.HttpMethodOverride(HttpVerbs.Put)
-    
-    @Html.Partial("InputProdus", @Model)
-    <button class="btn btn-success" type="submit">Salveaza modificările</button>
-    <br />
-    <hr />
-</form>
-<br />
-<form method="post" action="/Produs/ModificaCategoriiAsociate/@Model.idProdus">
-    @Html.HttpMethodOverride(HttpVerbs.Delete)
 
+    @Html.Partial("InputProdus", @Model)
+
+    <label>Categorii</label>
     <select class="form-control" name="categoriiActualizateId" multiple>
 
         @foreach (var categ in Model.CategoriiAsociate)
@@ -31,11 +25,14 @@
         }
 
     </select>
+    <p class="text-danger">@ViewBag.eroareCategoriiLipsa</p>
     <br />
     <br />
-    <button class="btn btn-success" type="submit">Modifică categoriile</button>
-
+    <button class="btn btn-success" type="submit">Salveaza modificările</button>
+    <br />
+    <hr />
 </form>
+<br />
 
 
 

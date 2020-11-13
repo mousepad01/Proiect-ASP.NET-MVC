@@ -243,19 +243,51 @@ namespace Proiect_ASP.Controllers
             return View(produsDeAfisat);
         }
 
-        // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
+        // metoda care preia informatia din ambele form uri de editare (ale categoriilor, respectiv ale celorlalte informatii)
+        [HttpPut]
+        public ActionResult SwitchEditare(int id, Produs produsActualizat, int[] categoriiActualizateId)
+        {
+            // apelez pe rand metodele de modificare (separate) ale categoriilor, respectiv ale celorlalte informatii
+            // verific, separat, daca aceste metode au modificat cu succes
+            // iar daca cel putin una nu a reusit, reintorc in formularul de editare
+            // cu mesajele de eroare necesare, dar cu campurile deja completate retinute
+
+            bool ok_categ = StergeCategoriiAsociate(id, categoriiActualizateId);
+
+            if (!ok_categ)
+                ViewBag.eroareCategoriiLipsa = "Trebuie să selectați cel puțin o categorie";
+
+            bool ok_rest = Editare(id, produsActualizat);
+
+            if(!ok_categ || !ok_rest)
+            {
+                produsActualizat.idProdus = id;
+
+                produsActualizat.CategoriiAsociate = categoriiAsociate(produsActualizat, categoriiActualizateId);
+                produsActualizat.CategoriiNeasociate = categoriiNeasociate(produsActualizat, produsActualizat.CategoriiAsociate);
+
+                return View("FormEditare", produsActualizat);
+            }
+            else
+            {
+                return RedirectToAction("Afisare", new { id = id });
+            }
+        }
+
+        // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile asociate preluate
         // (se are in vedere ca metoda care o apeleaza sterge vechile categorii de dinainte)
         //
         // Am ales sa implementez asa deoarece ar fi existat situatii cand trebuia sa sterg vechile categorii
         // Si in acelasi timp sa adaug altele noi, deci in cel mai rau caz oricum aveam de apelat doua metode
         // Pentru a simplifica implementarea, le apelez de fiecare data, 
-        // Renuntand la ideea de a imparti situatia in mai multe cazuri
+        // Renuntand la ideea de a imparti situatia in mai multe cazuri particulare
         [NonAction]
-        public ActionResult AdaugaCategoriiAsociate(int id, int n_categ, Categorie[] categoriiDeAdaugat)
-        {   
+        public bool AdaugaCategoriiAsociate(int id, Categorie[] categoriiDeAdaugat)
+        {
+            System.Diagnostics.Debug.WriteLine("Editez si categoriile - adaug");
             try
             {
-                for (int i = 0; i < n_categ; i++)
+                for (int i = 0; i < categoriiDeAdaugat.Length; i++)
                 {
                     var categIdAux = categoriiDeAdaugat[i].idCategorie;
 
@@ -270,37 +302,26 @@ namespace Proiect_ASP.Controllers
                     db.SaveChanges();
                 }
 
-                return RedirectToAction("Afisare", new { id = id });
+                return true;
             }
             catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine("Editez si categoriile - adaug EXCEPTIE");
                 ViewBag.exceptie = e;
-                return View("ExceptieEditare");
+                return false;
             }
         }
 
         // Prima metoda (a doua fiind AdaugaCategoriiAsociate) 
         // folosita in vederea modificarii categoriilor din care un produs face parte
-        // STERGE vechile categorii
+        // STERGE vechile categorii asociate
         [HttpDelete]
-        public ActionResult ModificaCategoriiAsociate(int id, int[] categoriiActualizateId)
+        public bool StergeCategoriiAsociate(int id, int[] categoriiActualizateId)
         {
+            System.Diagnostics.Debug.WriteLine("Editez si categoriile - sterg");
             try
             {
-                Categorie[] categoriiActualizate = new Categorie[100];
-
-                for(int i = 0; i < categoriiActualizateId.Length; i++)
-                {
-                    //System.Diagnostics.Debug.WriteLine(categoriiActualizateId[i]);
-                    int categId = categoriiActualizateId[i];
-
-                    var categ = from c in db.Categorii
-                                where c.idCategorie == categId
-                                select c;
-
-                    categoriiActualizate[i] = categ.SingleOrDefault();
-                    //System.Diagnostics.Debug.WriteLine(categoriiActualizate[i].titlu);
-                }
+                Categorie[] categoriiActualizate = categoriiDinId(categoriiActualizateId);
 
                 var asocieri = from cp in db.CategoriiProduse
                                where cp.idProdus == id
@@ -311,13 +332,14 @@ namespace Proiect_ASP.Controllers
 
                 db.SaveChanges();
 
-                return AdaugaCategoriiAsociate(id, categoriiActualizateId.Length, categoriiActualizate);
+                return AdaugaCategoriiAsociate(id, categoriiActualizate);
             }
             catch (Exception e)
             {
-                ViewBag.exceptie = e;
-
-                return View("EditareNereusita");
+                //ViewBag.exceptie = e;
+                System.Diagnostics.Debug.WriteLine(e);
+                System.Diagnostics.Debug.WriteLine("Editez si categoriile - sterg EXCEPTIE");
+                return false;
             }
         }
 
@@ -334,8 +356,10 @@ namespace Proiect_ASP.Controllers
 
         // Editarea informatiilor unui produs FARA CATEGORIILE ASOCIATE
         [HttpPut]
-        public ActionResult Editare(int id, Produs produsActualizat)
+        public bool Editare(int id, Produs produsActualizat)
         {
+
+            System.Diagnostics.Debug.WriteLine("Editez fara categorii");
             Produs produsDeEditat = db.Produse.Find(id);
 
             try
@@ -347,30 +371,25 @@ namespace Proiect_ASP.Controllers
                         produsDeEditat = produsActualizat;
                         db.SaveChanges();
 
-                        return RedirectToAction("Afisare", new { id = id });
+                        return true;
                     }
                     else
                     {
                         ViewBag.produs = produsDeEditat;
-                        return View("EditareNereusita");
+                        return false;
                     }
                 }
                 else
                 {
-                    /*produsDeEditat.CategoriiNeasociate = categoriiNeasociate(produsDeEditat);
-                    produsDeEditat.CategoriiAsociate = categoriiAsociate(produsDeEditat);*/
-                    produsActualizat.CategoriiNeasociate = categoriiNeasociate(produsDeEditat, produsActualizat.CategoriiAsociate);
-                    System.Diagnostics.Debug.WriteLine(produsActualizat.CategoriiNeasociate.Count());
-                    System.Diagnostics.Debug.WriteLine(produsActualizat.CategoriiAsociate.Count());
-                    return View("FormEditare", produsActualizat);
+                    return false;
                 }
                 
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                ViewBag.exceptie = e;
+                //ViewBag.exceptie = e;
 
-                return View("ExceptieEditare");
+                return false;
             }
         }
 
@@ -379,8 +398,7 @@ namespace Proiect_ASP.Controllers
         {
             Produs produs = new Produs();
 
-            // gasirea categoriilor asociate nu este necesara
-            // intrucat produsul trimis catre view este nou
+            // produsul, evident, nu are categorii asociate, dar apelez metodele pentru evitarea erorilor
             produs.CategoriiAsociate = categoriiAsociate(produs);
             produs.CategoriiNeasociate = categoriiNeasociate(produs);
 
