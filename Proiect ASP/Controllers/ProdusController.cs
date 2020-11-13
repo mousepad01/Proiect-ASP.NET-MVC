@@ -240,6 +240,16 @@ namespace Proiect_ASP.Controllers
 
             produsDeAfisat.CategoriiAsociate = categoriiAsociate(produsDeAfisat);
 
+            var ratinguri = from pr in db.ProduseRatinguri
+                            select pr;
+
+            ViewBag.ratinguri = ratinguri;
+            ViewBag.ratingPrec = "";
+            ViewBag.ratingDescPrec = "";
+
+            if (TempData["mesaj"] != null)
+                ViewBag.mesaj = TempData["mesaj"];
+
             return View(produsDeAfisat);
         }
 
@@ -270,6 +280,8 @@ namespace Proiect_ASP.Controllers
             }
             else
             {
+                TempData["mesaj"] = "Produsul a fost editat cu succes!";
+
                 return RedirectToAction("Afisare", new { id = id });
             }
         }
@@ -284,7 +296,6 @@ namespace Proiect_ASP.Controllers
         [NonAction]
         public bool AdaugaCategoriiAsociate(int id, Categorie[] categoriiDeAdaugat)
         {
-            System.Diagnostics.Debug.WriteLine("Editez si categoriile - adaug");
             try
             {
                 for (int i = 0; i < categoriiDeAdaugat.Length; i++)
@@ -304,10 +315,8 @@ namespace Proiect_ASP.Controllers
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine("Editez si categoriile - adaug EXCEPTIE");
-                ViewBag.exceptie = e;
                 return false;
             }
         }
@@ -318,7 +327,6 @@ namespace Proiect_ASP.Controllers
         [HttpDelete]
         public bool StergeCategoriiAsociate(int id, int[] categoriiActualizateId)
         {
-            System.Diagnostics.Debug.WriteLine("Editez si categoriile - sterg");
             try
             {
                 Categorie[] categoriiActualizate = categoriiDinId(categoriiActualizateId);
@@ -334,16 +342,13 @@ namespace Proiect_ASP.Controllers
 
                 return AdaugaCategoriiAsociate(id, categoriiActualizate);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                //ViewBag.exceptie = e;
-                System.Diagnostics.Debug.WriteLine(e);
-                System.Diagnostics.Debug.WriteLine("Editez si categoriile - sterg EXCEPTIE");
                 return false;
             }
         }
 
-        //GET: Afisarea form ului pentru editarea unui produs INCLUSIV CATEGORIILE ASOCIATE
+        //GET: Afisarea form ului pentru editarea unui produs 
         public ActionResult Editare(int id)
         {
             Produs produsDeEditat = db.Produse.Find(id);
@@ -358,8 +363,6 @@ namespace Proiect_ASP.Controllers
         [HttpPut]
         public bool Editare(int id, Produs produsActualizat)
         {
-
-            System.Diagnostics.Debug.WriteLine("Editez fara categorii");
             Produs produsDeEditat = db.Produse.Find(id);
 
             try
@@ -380,15 +383,10 @@ namespace Proiect_ASP.Controllers
                     }
                 }
                 else
-                {
                     return false;
-                }
-                
             }
             catch(Exception)
             {
-                //ViewBag.exceptie = e;
-
                 return false;
             }
         }

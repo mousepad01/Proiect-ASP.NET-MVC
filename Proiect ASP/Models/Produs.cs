@@ -39,9 +39,12 @@ namespace Proiect_ASP.Models
         public int cantitate { get; set; }
 
         public virtual ICollection<CategorieProdus> CategoriiProduse { get; set; }
+        public virtual ICollection<ProdusRating> ProduseRatinguri { get; set; }
 
         //atribute pentru categoriile asociate si neasociate pentru a le folosi in form-uri
         public IEnumerable <SelectListItem> CategoriiAsociate { get; set; }
         public IEnumerable <SelectListItem> CategoriiNeasociate { get; set; }
+
+        public IEnumerable <SelectListItem> Ratinguri { get; set; }
     }
 }

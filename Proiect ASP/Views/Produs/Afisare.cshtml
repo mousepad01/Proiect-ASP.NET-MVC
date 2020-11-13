@@ -5,6 +5,8 @@
 
 @model Proiect_ASP.Models.Produs
 
+<h3>@ViewBag.mesaj</h3>
+
 <h2>@Model.titlu</h2>
 @foreach (var categ in Model.CategoriiAsociate)
 {   
@@ -40,6 +42,27 @@
         </form>
         <br />
         <a class="btn btn-info" href="/Produs/Editare/@Model.idProdus" role="button">Editează acest produs</a>
+    </div>
+    @foreach(var rev in ViewBag.ratinguri)
+    {  
+        <br />
+        <p>@rev.rating</p>
+        <p>@rev.descriere</p>
+        <br />
+    }
+    <div>
+        <form method="post" action="/ProdusRating/AdaugaRating/@Model.idProdus">
+
+            <label>Notă</label>
+            <input name="rating" type="number" value="@ViewBag.ratingPrec"/>
+            @Html.ValidationMessageFor(m => m.Ratinguri, null, new { @class = "text-danger" })
+            <br />
+            <label>Descriere</label>
+            <input name="descriere" type="text" value="@ViewBag.ratingDescPrec"/>
+            @Html.ValidationMessageFor(m => m.descriere, null, new { @class = "text-danger" })
+            <br />
+            <button type="submit">Salvează review</button>
+        </form>
     </div>
 </div>
 
