@@ -26,3 +26,12 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* In vederea afisarii mesajelor de eroare daor dupa ce valoarea din camp este modificata*/
+.field-validation-valid {
+    display: none;
+}
+
+.validation-summary-valid {
+    display: none;
+}

@@ -3,50 +3,31 @@
     ViewBag.Title = "FormEditare";
 }
 
+@model Proiect_ASP.Models.Produs
+
 <h2>Editează produsul (functionalitate la care ar trebui sa aiba acces doar userii colaboratori / adminii?)</h2>
 
-<form method="post" action="/Produs/Editare/@ViewBag.produs.idProdus">
+<form method="post" action="/Produs/Editare/@Model.idProdus">
     @Html.HttpMethodOverride(HttpVerbs.Put)
-
-    <div class="form-group">
-        <label>Titlu</label>
-        <input class="form-control" type="text" name="titlu" value="@ViewBag.produs.titlu" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>Descriere</label>
-        <input class="form-control" type="text" name="descriere" value="@ViewBag.produs.descriere" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>Preț</label>
-        <input class="form-control" type="number" name="pret" value="@ViewBag.produs.pret" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>Cantitate</label>
-        <input class="form-control" type="number" name="cantitate" value="@ViewBag.produs.cantitate" />
-    </div>
-    <br />
-    <input class="form-control" type="hidden" name="idOwner" value="@ViewBag.produs.idOwner" />
-    <br />
+    
+    @Html.Partial("InputProdus", @Model)
     <button class="btn btn-success" type="submit">Salveaza modificările</button>
     <br />
     <hr />
 </form>
 <br />
-<form method="post" action="/Produs/ModificaCategoriiAsociate/@ViewBag.produs.idProdus">
+<form method="post" action="/Produs/ModificaCategoriiAsociate/@Model.idProdus">
     @Html.HttpMethodOverride(HttpVerbs.Delete)
 
     <select class="form-control" name="categoriiActualizateId" multiple>
 
-        @foreach (var categ in ViewBag.categoriiAsociate)
+        @foreach (var categ in Model.CategoriiAsociate)
         {
-            <option value="@categ.idCategorie" selected>@categ.titlu</option>
+            <option value="@categ.Value" selected>@categ.Text</option>
         }
-        @foreach (var categ in ViewBag.categoriiNeasociate)
+        @foreach (var categ in Model.CategoriiNeasociate)
         {
-            <option value="@categ.idCategorie">@categ.titlu</option>
+            <option value="@categ.Value">@categ.Text</option>
         }
 
     </select>

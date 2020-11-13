@@ -3,10 +3,12 @@
     ViewBag.Title = "Afisare";
 }
 
-<h2>@ViewBag.produs.titlu</h2>
-@foreach (var categ in ViewBag.categorii)
+@model Proiect_ASP.Models.Produs
+
+<h2>@Model.titlu</h2>
+@foreach (var categ in Model.CategoriiAsociate)
 {   
-    <a href="/Categorie/Afisare/@categ.idCategorie">@categ.titlu</a>
+    <a href="/Categorie/Afisare/@categ.Value">@categ.Text</a>
 }
 <br />
 <hr />
@@ -15,29 +17,29 @@
     <div class="panel-body">
         <div class="row">
             <div class="col col-md-4">
-                <i class="glyphicon glyphicon-user"></i> Producător: @ViewBag.produs.idOwner
+                <i class="glyphicon glyphicon-user"></i> Producător: @Model.idOwner
             </div>
             <div class="col col-md-4">
-                <i class="glyphicon glyphicon-tag"></i> Preț: @ViewBag.produs.pret
+                <i class="glyphicon glyphicon-tag"></i> Preț: @Model.pret
             </div>
             <div class="col col-md-4">
-                <i class="glyphicon glyphicon-question-sign"></i> Cantitate disponibilă: @ViewBag.produs.cantitate
+                <i class="glyphicon glyphicon-question-sign"></i> Cantitate disponibilă: @Model.cantitate
             </div>
         </div>
         <br />
-        @ViewBag.produs.descriere
+        @Model.descriere
         <br />
         <br />
-        <i class="glyphicon glyphicon-calendar"></i> Adăugat la data de: @ViewBag.produs.dataAdaugare
+        <i class="glyphicon glyphicon-calendar"></i> Adăugat la data de: @Model.dataAdaugare
     </div>
     <div class="panel panel-footer">
-        <form method="post" action="/Produs/Stergere/@ViewBag.produs.idProdus">
+        <form method="post" action="/Produs/Stergere/@Model.idProdus">
             @Html.HttpMethodOverride(HttpVerbs.Delete)
 
             <button class="btn btn-danger" type="submit">Șterge permanent acest produs</button>
         </form>
         <br />
-        <a class="btn btn-info" href="/Produs/Editare/@ViewBag.produs.idProdus" role="button">Editează acest produs</a>
+        <a class="btn btn-info" href="/Produs/Editare/@Model.idProdus" role="button">Editează acest produs</a>
     </div>
 </div>
 

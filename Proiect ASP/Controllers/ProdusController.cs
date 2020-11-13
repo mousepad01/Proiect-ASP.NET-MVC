@@ -106,22 +106,141 @@ namespace Proiect_ASP.Controllers
             return View("Index");
         }
 
+        // Returneaza o lista cu obiecte de tipul (valoare, text) 
+        // unde valoarea este ID ul categoriei asociate (sub forma de string)
+        // iar textul este TITLUL categoriei asociate (sub forma de string)
+        [NonAction]
+        public IEnumerable <SelectListItem> categoriiAsociate(Produs produs)
+        {
+            var categoriiAsociateQuery = from cp in db.CategoriiProduse
+                                         from c in db.Categorii
+                                         where cp.idProdus == produs.idProdus
+                                         where cp.idCategorie == c.idCategorie
+                                         select c;
+
+            var categoriiAsociate = new List <SelectListItem>();
+            
+            foreach(var categ in categoriiAsociateQuery)
+            {
+                categoriiAsociate.Add(new SelectListItem
+                {
+                    Value = categ.idCategorie.ToString(),
+                    Text = categ.titlu.ToString()
+                });
+            }
+
+            return categoriiAsociate;
+        }
+
+        // Returneaza o lista cu obiecte de tipul (valoare, text) 
+        // unde valoarea este ID ul categoriei neasociate (sub forma de string)
+        // iar textul este TITLUL categoriei neasociate (sub forma de string)
+        [NonAction]
+        public IEnumerable <SelectListItem> categoriiNeasociate(Produs produs)
+        {
+            var categoriiAsociateQuery = from cp in db.CategoriiProduse
+                                         from c in db.Categorii
+                                         where cp.idProdus == produs.idProdus
+                                         where cp.idCategorie == c.idCategorie
+                                         select c;
+
+            var categoriiNeasociateQuery = (from c in db.Categorii
+                                            select c).Except(categoriiAsociateQuery);
+
+            var categoriiNeasociate = new List <SelectListItem>();
+
+            foreach(var categ in categoriiNeasociateQuery)
+            {
+                categoriiNeasociate.Add(new SelectListItem
+                {
+                    Value = categ.idCategorie.ToString(),
+                    Text = categ.titlu.ToString()
+                });
+            }
+
+            return categoriiNeasociate;
+        }
+
+        // overload pe metoda categoriiNeasociate, care primeste in plus lista de categorii asociate
+        [NonAction]
+        public IEnumerable <SelectListItem> categoriiNeasociate(Produs produs, IEnumerable <SelectListItem> categoriiAsociate)
+        {
+            var categoriiNeasociate = new List <SelectListItem>();
+            
+            var categoriiQuery = from c in db.Categorii
+                                 select c;
+
+            foreach(var categ in categoriiQuery)
+            {
+                var categPending = new SelectListItem{ Value = categ.idCategorie.ToString(), Text = categ.titlu.ToString()};
+
+                if (!categoriiAsociate.Any(c => c.Value == categPending.Value))
+                    categoriiNeasociate.Add(categPending);
+            }
+
+            return categoriiNeasociate;
+        }
+
+        // metoda care returneaza un array de categorii asociat unui array de ID uri primite ca parametru
+        [NonAction]
+        public Categorie[] categoriiDinId(int[] categoriiId)
+        {   
+            Categorie[] categoriiCorespunzatoare = new Categorie[categoriiId.Length];
+
+            for (int i = 0; i < categoriiId.Length; i++)
+            {
+                int categId = categoriiId[i];
+
+                var categ = from c in db.Categorii
+                            where c.idCategorie == categId
+                            select c;
+
+                categoriiCorespunzatoare[i] = categ.SingleOrDefault();
+            }
+
+            return categoriiCorespunzatoare;
+        }
+
+        // overload pe metoda categoriiAsociate, care primeste in plus lista de ID uri ale categoriilor asociate
+        // si returneaza obiectul de tip IEnumerable corespunzator array ului de ID uri trimis ca parametru
+        [NonAction]
+        public IEnumerable <SelectListItem> categoriiAsociate(Produs produs, int[] categoriiAsociateId)
+        {
+            Categorie[] categoriiAsociateArray;
+
+            var categoriiAsociateRez = new List<SelectListItem>();
+
+            try
+            {
+                categoriiAsociateArray = categoriiDinId(categoriiAsociateId);
+
+                for (int i = 0; i < categoriiAsociateArray.Length; i++)
+                {
+                    categoriiAsociateRez.Add(new SelectListItem
+                    {
+                        Value = categoriiAsociateArray[i].idCategorie.ToString(),
+                        Text = categoriiAsociateArray[i].titlu.ToString()
+                    });
+                }
+
+                return categoriiAsociateRez;
+            }
+            catch (NullReferenceException)
+            {
+                return categoriiAsociateRez;
+            }
+            
+           
+        }
+
         // GET: Afisarea unui produs (si a categoriilor asociate)
         public ActionResult Afisare(int id)
         {
-            Produs produs = db.Produse.Find(id);
+            Produs produsDeAfisat = db.Produse.Find(id);
 
-            //caategoriile din care produsul face parte
-            var categorii = from cp in db.CategoriiProduse
-                            from c in db.Categorii
-                            where cp.idProdus == produs.idProdus
-                            where cp.idCategorie == c.idCategorie
-                            select c;
+            produsDeAfisat.CategoriiAsociate = categoriiAsociate(produsDeAfisat);
 
-            ViewBag.produs = produs;
-            ViewBag.categorii = categorii;
-
-            return View();
+            return View(produsDeAfisat);
         }
 
         // Adauga in tabela CategoriiProduse inregistrari cu id-ul dat si categoriile preluate
@@ -202,50 +321,50 @@ namespace Proiect_ASP.Controllers
             }
         }
 
-        //GET: Afisarea form ului pentru editarea unui produs 
+        //GET: Afisarea form ului pentru editarea unui produs INCLUSIV CATEGORIILE ASOCIATE
         public ActionResult Editare(int id)
         {
             Produs produsDeEditat = db.Produse.Find(id);
+            
+            produsDeEditat.CategoriiNeasociate = categoriiNeasociate(produsDeEditat);
+            produsDeEditat.CategoriiAsociate = categoriiAsociate(produsDeEditat);
 
-            var categoriiAsociate = from cp in db.CategoriiProduse
-                                    from c in db.Categorii
-                                    where cp.idProdus == produsDeEditat.idProdus
-                                    where cp.idCategorie == c.idCategorie
-                                    select c;
-
-            // delimitez categoriile neasociate de cele asociate
-            var categoriiNeasociate = (from c in db.Categorii
-                                       select c).Except(categoriiAsociate);
-
-            ViewBag.categoriiNeasociate = categoriiNeasociate;
-
-            ViewBag.categoriiAsociate = categoriiAsociate;
-
-            ViewBag.produs = produsDeEditat;
-
-            return View("FormEditare");
+            return View("FormEditare", produsDeEditat);
         }
 
         // Editarea informatiilor unui produs FARA CATEGORIILE ASOCIATE
         [HttpPut]
-        public ActionResult Editare(int id, string strCategorii, Produs produsActualizat)
+        public ActionResult Editare(int id, Produs produsActualizat)
         {
             Produs produsDeEditat = db.Produse.Find(id);
 
             try
-            { 
-                if (TryUpdateModel(produsDeEditat))
+            {
+                if (ModelState.IsValid)
                 {
-                    produsDeEditat = produsActualizat;
-                    db.SaveChanges();
+                    if (TryUpdateModel(produsDeEditat))
+                    {
+                        produsDeEditat = produsActualizat;
+                        db.SaveChanges();
 
-                    return RedirectToAction("Afisare", new { id = id });
+                        return RedirectToAction("Afisare", new { id = id });
+                    }
+                    else
+                    {
+                        ViewBag.produs = produsDeEditat;
+                        return View("EditareNereusita");
+                    }
                 }
                 else
                 {
-                    ViewBag.produs = produsDeEditat;
-                    return View("EditareNereusita");
+                    /*produsDeEditat.CategoriiNeasociate = categoriiNeasociate(produsDeEditat);
+                    produsDeEditat.CategoriiAsociate = categoriiAsociate(produsDeEditat);*/
+                    produsActualizat.CategoriiNeasociate = categoriiNeasociate(produsDeEditat, produsActualizat.CategoriiAsociate);
+                    System.Diagnostics.Debug.WriteLine(produsActualizat.CategoriiNeasociate.Count());
+                    System.Diagnostics.Debug.WriteLine(produsActualizat.CategoriiAsociate.Count());
+                    return View("FormEditare", produsActualizat);
                 }
+                
             }
             catch(Exception e)
             {
@@ -258,12 +377,14 @@ namespace Proiect_ASP.Controllers
         //GET: afisarea form ului pentru adaugarea unui produs nou
         public ActionResult Adaugare()
         {
-            var categorii = from c in db.Categorii
-                            select c;
+            Produs produs = new Produs();
 
-            ViewBag.categorii = categorii;
+            // gasirea categoriilor asociate nu este necesara
+            // intrucat produsul trimis catre view este nou
+            produs.CategoriiAsociate = categoriiAsociate(produs);
+            produs.CategoriiNeasociate = categoriiNeasociate(produs);
 
-            return View("FormAdaugare");
+            return View("FormAdaugare", produs);
         }
 
         [HttpPost]
@@ -271,29 +392,33 @@ namespace Proiect_ASP.Controllers
         { 
             try
             {
-                Categorie[] categoriiDeAdaugat = new Categorie[100];
+                produsDeAdaugat.CategoriiAsociate = categoriiAsociate(produsDeAdaugat, categoriiDeAdaugatId);
 
-                for (int i = 0; i < categoriiDeAdaugatId.Length; i++)
+                if (ModelState.IsValid && produsDeAdaugat.CategoriiAsociate.Count() > 0)
                 {
-                    int categId = categoriiDeAdaugatId[i];
+                    Categorie[] categoriiDeAdaugat = categoriiDinId(categoriiDeAdaugatId);
 
-                    var categ = from c in db.Categorii
-                                where c.idCategorie == categId
-                                select c;
+                    produsDeAdaugat.dataAdaugare = DateTime.Now;
 
-                    categoriiDeAdaugat[i] = categ.SingleOrDefault();
+                    db.Produse.Add(produsDeAdaugat);
+
+                    for (int i = 0; i < categoriiDeAdaugatId.Length; i++)
+                        db.CategoriiProduse.Add(new CategorieProdus { idProdus = produsDeAdaugat.idProdus, idCategorie = categoriiDeAdaugat[i].idCategorie });
+
+                    db.SaveChanges();
+
+                    return RedirectToAction("Afisare", new { id = produsDeAdaugat.idProdus });
                 }
+                else
+                {
+                    produsDeAdaugat.CategoriiNeasociate = categoriiNeasociate(produsDeAdaugat, produsDeAdaugat.CategoriiAsociate);
 
-                produsDeAdaugat.dataAdaugare = DateTime.Now;
+                    if(produsDeAdaugat.CategoriiAsociate.Count() == 0)
+                        ViewBag.eroareCategoriiLipsa = "Produsul trebuie să facă parte din cel puțin o categorie!";
 
-                db.Produse.Add(produsDeAdaugat);
-
-                for(int i = 0; i < categoriiDeAdaugatId.Length; i++)
-                    db.CategoriiProduse.Add(new CategorieProdus { idProdus = produsDeAdaugat.idProdus, idCategorie = categoriiDeAdaugat[i].idCategorie });
-
-                db.SaveChanges();
-
-                return RedirectToAction("Afisare", new { id = produsDeAdaugat.idProdus });
+                    return View("FormAdaugare", produsDeAdaugat);
+                }
+                
             }
             catch (Exception e)
             {

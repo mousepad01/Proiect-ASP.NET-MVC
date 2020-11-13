@@ -3,43 +3,27 @@
     ViewBag.Title = "FormAdaugare";
 }
 
+@model Proiect_ASP.Models.Produs
+
 <h2>Adauga un nou produs (functionalitatea ar trebui sa fie disponibila doar utilizatorilor colaboratori)</h2>
 <br />
 <form method="post" action="/Produs/Adaugare">
 
-    <div class="form-group">
-        <label>Titlu</label>
-        <input class="form-control" type="text" name="titlu" />
-    </div>
-    <br />
-    <select class="form-control" name="categoriiDeAdaugatId" multiple>
+    @Html.Partial("InputProdus", @Model)
 
-        @foreach (var categ in ViewBag.categorii)
+    <select id="categoriiForm" class="form-control" name="categoriiDeAdaugatId" multiple>
+
+        @foreach (var categ in Model.CategoriiAsociate)
         {
-            <option value="@categ.idCategorie">@categ.titlu</option>
+            <option value="@categ.Value" selected>@categ.Text</option>
+        }
+        @foreach (var categ in Model.CategoriiNeasociate)
+        {
+            <option value="@categ.Value">@categ.Text</option>
         }
 
     </select>
-    <br />
-    <div class="form-group">
-        <label>Descriere</label>
-        <input class="form-control" type="text" name="descriere" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>Preț</label>
-        <input class="form-control" type="number" name="pret" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>Cantitate</label>
-        <input class="form-control" type="number" name="cantitate" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>ID Owner</label>
-        <input class="form-control" type="number" name="idOwner" />
-    </div>
+    <p for="categoriiForm" class="text-danger">@ViewBag.eroareCategoriiLipsa</p>
     <br />
     <button class="btn btn-success" type="submit">Adaugă noul produs</button>
 

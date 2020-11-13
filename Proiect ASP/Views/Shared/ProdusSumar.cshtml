@@ -1,0 +1,17 @@
+﻿@model Proiect_ASP.Models.Produs
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <a href="/Produs/Afisare/@Model.idProdus">@Model.titlu</a>
+    </div>
+    <div class="panel-body">
+        <i class="glyphicon glyphicon-user"></i> Producător: @Model.idOwner
+        <br />
+        <i class="glyphicon glyphicon-tag"></i> @Model.pret
+        <br />
+    </div>
+    <div class="panel panel-footer">
+        <a class="btn btn-primary" href="/Produs/Afisare/@Model.idProdus" role="button">Afișare produs</a>
+        <br />
+    </div>
+</div>

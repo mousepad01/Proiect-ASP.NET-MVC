@@ -181,9 +181,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Categorie\Index.cshtml" />
     <Content Include="Views\Categorie\Afisare.cshtml" />
     <Content Include="Views\Categorie\FormEditare.cshtml" />
@@ -200,6 +197,9 @@
     <Content Include="Views\Produs\ExceptieStergere.cshtml" />
     <Content Include="Views\Produs\ExceptieAdaugare.cshtml" />
     <Content Include="Views\Produs\FormAdaugare.cshtml" />
+    <Content Include="Views\Shared\InputCategorii.cshtml" />
+    <Content Include="Views\Shared\ProdusSumar.cshtml" />
+    <Content Include="Views\Shared\InputProdus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202010311825255_Initial.resx">

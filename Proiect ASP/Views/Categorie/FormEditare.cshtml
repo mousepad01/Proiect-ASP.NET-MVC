@@ -3,22 +3,16 @@
     ViewBag.Title = "FormEditare";
 }
 
+@model Proiect_ASP.Models.Categorie
+
 <h2>Editeaza categoria (functionalitate la ca re ar trebui sa aiba acces doar adminii):</h2>
 
-<form method="post" action="/Categorie/Editare/@ViewBag.categorie.idCategorie">
+<form method="post" action="/Categorie/Editare/@Model.idCategorie">
     @Html.HttpMethodOverride(HttpVerbs.Put)
     <div class="form-group">
-        <label>ID Categorie: @ViewBag.categorie.idCategorie</label>
+        <label>ID Categorie: @Model.idCategorie</label>
     </div>
-    <div class="form-group">
-        <label>Titlu</label>
-        <input class="form-control" type="text" name="titlu" value="@ViewBag.categorie.titlu" />
-    </div>
-    <br />
-    <div class="form-group">
-        <label>Descriere</label>
-        <input class="form-control" type="text" name="descriere" value="@ViewBag.categorie.descriere" />
-    </div>
+    @Html.Partial("InputCategorii", @Model)
     <br />
     <button class="btn btn-success" type="submit">Salvează modificarile</button>
 </form>

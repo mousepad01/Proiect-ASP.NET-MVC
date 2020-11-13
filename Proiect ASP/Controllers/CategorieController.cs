@@ -19,6 +19,9 @@ namespace Proiect_ASP.Controllers
 
             ViewBag.categorii = categorii;
 
+            if (TempData["mesaj"] != null)
+                ViewBag.mesaj = TempData["mesaj"];
+
             return View();
         }
 
@@ -45,9 +48,7 @@ namespace Proiect_ASP.Controllers
         {
             Categorie categorieDeEditat = db.Categorii.Find(id);
 
-            ViewBag.categorie = categorieDeEditat;
-
-            return View("FormEditare");
+            return View("FormEditare", categorieDeEditat);
         }
 
         [HttpPut]
@@ -57,19 +58,28 @@ namespace Proiect_ASP.Controllers
 
             try
             {
-                if (TryUpdateModel(categorieDeEditat))
+                if (ModelState.IsValid)
                 {
-                    categorieDeEditat = categorieActualizata;
-                    db.SaveChanges();
+                    if (TryUpdateModel(categorieDeEditat))
+                    {
+                        categorieDeEditat = categorieActualizata;
+                        db.SaveChanges();
 
-                    return RedirectToAction("Afisare", new { id = id });
+                        return RedirectToAction("Afisare", new { id = id });
+                    }
+
+                    else
+                    {
+                        ViewBag.categorie = categorieDeEditat;
+                        return View("EditareNereusita");
+                    }
                 }
-
                 else
                 {
-                    ViewBag.categorie = categorieDeEditat;
-                    return View("EditareNereusita");
+                    categorieActualizata.idCategorie = categorieDeEditat.idCategorie;
+                    return View("FormEditare", categorieActualizata);
                 }
+                
             }
             catch (Exception e)
             {
@@ -82,7 +92,8 @@ namespace Proiect_ASP.Controllers
         //GET: afisarea form ului de adaugare a unei noi categorii
         public ActionResult Adaugare()
         {
-            return View("FormAdaugare");
+            Categorie categ = new Categorie();
+            return View("FormAdaugare", categ);
         }
 
         [HttpPost]
@@ -90,16 +101,17 @@ namespace Proiect_ASP.Controllers
         {
             try
             {
-                //System.Diagnostics.Debug.WriteLine(categorieDeAdaugat.idCategorie); ---> afiseaza 0
-                Categorie categorieAdaugata = db.Categorii.Add(categorieDeAdaugat);  // returneaza obiectul adaugat
-                //System.Diagnostics.Debug.WriteLine(categorieDeAdaugat.idCategorie); ---> afiseaza 0
-                //System.Diagnostics.Debug.WriteLine(categorieAdaugata.idCategorie);  ---> afiseaza TOT 0
-                db.SaveChanges();
-                //System.Diagnostics.Debug.WriteLine(categorieAdaugata.idCategorie); ---> afiseaza id ul setat automat
-                //System.Diagnostics.Debug.WriteLine(categorieDeAdaugat.idCategorie); ---> afiseaza id ul setat automat
+                if (ModelState.IsValid)
+                {
+                    Categorie categorieAdaugata = db.Categorii.Add(categorieDeAdaugat);  // returneaza obiectul adaugat
+                    db.SaveChanges();
 
-                //return RedirectToAction("Afisare", new { id = categorieAdaugata.idCategorie }); ---> acelasi lucru ca linia de mai jos
-                return RedirectToAction("Afisare", new { id = categorieDeAdaugat.idCategorie });
+                    return RedirectToAction("Afisare", new { id = categorieDeAdaugat.idCategorie });
+                }
+                else
+                {
+                    return View("FormAdaugare", categorieDeAdaugat);
+                }
             }
             catch (Exception e)
             {
@@ -117,6 +129,8 @@ namespace Proiect_ASP.Controllers
                 db.Categorii.Remove(categorieDeSters);
 
                 db.SaveChanges();
+
+                TempData["mesaj"] = "Categoria a fost ștearsă cu succes!";
 
                 return RedirectToAction("Index");
             }

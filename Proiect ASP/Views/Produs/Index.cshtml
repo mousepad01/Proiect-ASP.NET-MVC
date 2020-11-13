@@ -5,7 +5,7 @@
 
 <h1>@ViewBag.mesaj</h1>
 
-<h1>Lista completa de produse</h1>
+<h1>Lista completă de produse:</h1>
 
 <br />
 <div class="container-fluid">
@@ -53,23 +53,9 @@
                 </div>
             </div>
             <div class="col col-9 col-md-9">
-                @foreach (var prod in ViewBag.produse)
+                @foreach (Proiect_ASP.Models.Produs prod in ViewBag.produse)
                 {
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            @prod.titlu
-                        </div>
-                        <div class="panel-body">
-                            <i class="glyphicon glyphicon-user"></i> Producător: @prod.idOwner
-                            <br />
-                            <i class="glyphicon glyphicon-tag"></i> @prod.pret
-                            <br />
-                        </div>
-                        <div class="panel panel-footer">
-                            <a class="btn btn-primary" href="/Produs/Afisare/@prod.idProdus">Afișare produs</a>
-                            <br />
-                        </div>
-                    </div>
+                    @Html.Partial("ProdusSumar", prod)
                 }
             </div>
         </div>

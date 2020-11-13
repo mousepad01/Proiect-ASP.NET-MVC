@@ -21,26 +21,11 @@
         </form>
     </div>
 </div>
-
+<br />
 <h3>Produse din această categorie:</h3>
-@foreach (var prod in ViewBag.produse)
+<br />
+@foreach (Proiect_ASP.Models.Produs prod in ViewBag.produse)
 {
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="/Produs/Afisare/@prod.idProdus">@prod.titlu</a>
-        </div>
-        <div class="panel-body">
-            <i class="glyphicon glyphicon-user"></i> Producător: @prod.idOwner
-            <br />
-            <i class="glyphicon glyphicon-tag"></i> @prod.pret
-            <br />
-            @prod.descriere
-            <br />
-        </div>
-        <div class="panel panel-footer">
-            <a class="btn btn-primary" href="/Produs/Afisare/@prod.idProdus" role="button">Afișare produs</a>
-            <br />
-        </div>
-    </div>
+    @Html.Partial("ProdusSumar", prod)
     <hr />
 }
