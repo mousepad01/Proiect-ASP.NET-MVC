@@ -161,6 +161,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\ButoaneRating.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -201,6 +202,8 @@
     <Content Include="Views\Shared\InputCategorii.cshtml" />
     <Content Include="Views\Shared\ProdusSumar.cshtml" />
     <Content Include="Views\Shared\InputProdus.cshtml" />
+    <Content Include="Views\Shared\InputRating.cshtml" />
+    <Content Include="Views\Shared\EditareRating.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202010311825255_Initial.resx">

@@ -21,11 +21,11 @@ namespace Proiect_ASP.Models
 
         public DateTime dataReview { get; set; }
 
-        [Required(ErrorMessage = "Nu puteți încărca un rating inexistent")]
-        [Range(1, 5, ErrorMessage = "Rating-ul trebuie să fie între o stea și 5 stele")]
+        [Required]
+        [Range(1, 5)]
         public int rating { get; set; }
 
-        [MaxLength(1024, ErrorMessage = "Detalierea rating-ului trebuie să aibă maxim 2014 caractere!")]
+        [MaxLength(1024)]
         public string descriere { get; set; }
        
         public virtual Produs produs { get; set; }

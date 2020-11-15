@@ -28,6 +28,7 @@ textarea {
 }
 
 /* In vederea afisarii mesajelor de eroare daor dupa ce valoarea din camp este modificata*/
+/*
 .field-validation-valid {
     display: none;
 }
@@ -35,3 +36,4 @@ textarea {
 .validation-summary-valid {
     display: none;
 }
+*/

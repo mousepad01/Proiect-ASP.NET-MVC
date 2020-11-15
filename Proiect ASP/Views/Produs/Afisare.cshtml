@@ -43,28 +43,46 @@
         <br />
         <a class="btn btn-info" href="/Produs/Editare/@Model.idProdus" role="button">Editează acest produs</a>
     </div>
-    @foreach(var rev in ViewBag.ratinguri)
-    {  
+    @foreach (var rev in ViewBag.ratinguri)
+    {
         <br />
         <p>@rev.rating</p>
         <p>@rev.descriere</p>
+        <small>@rev.dataReview</small>
         <br />
-    }
-    <div>
-        <form method="post" action="/ProdusRating/AdaugaRating/@Model.idProdus">
-
-            <label>Notă</label>
-            <input name="rating" type="number" value="@ViewBag.ratingPrec"/>
-            @Html.ValidationMessageFor(m => m.Ratinguri, null, new { @class = "text-danger" })
-            <br />
-            <label>Descriere</label>
-            <input name="descriere" type="text" value="@ViewBag.ratingDescPrec"/>
-            @Html.ValidationMessageFor(m => m.descriere, null, new { @class = "text-danger" })
-            <br />
-            <button type="submit">Salvează review</button>
+        if (ViewBag.EroareEditareRating == true)
+        {
+        <div class="reviewEditare">
+            @Html.Partial("EditareRating", new Proiect_ASP.Models.ProdusRating { prodRating = ViewBag.ratingEronatEditare.prodRating, idProdus = ViewBag.ratingEronatEditare.idProdus, rating = ViewBag.ratingEronatEditare.rating, descriere = ViewBag.ratingEronatEditare.descriere })
+        </div>
+        }
+        else
+        {
+            <button class="ratingEditareBtn" onclick="editeaza(@rev.prodRating)" value="@rev.prodRating">Editează acest review</button>
+            <div class="reviewEditare"></div>
+        }
+        <br />
+        <form method="post" action="/ProdusRating/StergeRating/@rev.prodRating">
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+            <button type="submit">Șterge acest review</button>
         </form>
-    </div>
+    }
+
+    @if (ViewBag.EroareNouRating == true)
+    {
+        <div id="reviewNou">
+            @Html.Partial("InputRating", new Proiect_ASP.Models.ProdusRating { idProdus = ViewBag.ratingEronatAdaugare.idProdus, rating = ViewBag.ratingEronatAdaugare.rating, descriere = ViewBag.ratingEronatAdaugare.descriere })
+        </div>
+    }
+    else
+    {
+        <button id="ratingNouBtn" value="@Model.idProdus">Adaugă un nou review</button>
+        <div id="reviewNou"></div>
+    }
+
 </div>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/ButoaneRating.js"></script>
 
 
 

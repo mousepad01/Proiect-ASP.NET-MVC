@@ -1,0 +1,19 @@
+﻿@model Proiect_ASP.Models.ProdusRating
+
+<div>
+    <form method="post" action="/ProdusRating/AdaugaRating/@Model.idProdus">
+
+        <p class="text-danger">@ViewBag.eroare</p>
+
+        <label>Notă</label>
+        <input name="rating" type="number" value="@Model.rating" />
+        <br />
+        <label>Descriere</label>
+        <input name="descriere" type="text" value="@Model.descriere" />
+        <br />
+        <button type="submit">Salvează review</button>
+    </form>
+</div>
+
+
+

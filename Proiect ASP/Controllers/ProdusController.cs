@@ -241,11 +241,36 @@ namespace Proiect_ASP.Controllers
             produsDeAfisat.CategoriiAsociate = categoriiAsociate(produsDeAfisat);
 
             var ratinguri = from pr in db.ProduseRatinguri
+                            where pr.idProdus == id
                             select pr;
 
             ViewBag.ratinguri = ratinguri;
-            ViewBag.ratingPrec = "";
-            ViewBag.ratingDescPrec = "";
+
+            // daca valoarea este true, va afisa automat partial view ul de adaugare, 
+            // este folosit si pentru afisarea erorii la adaugarea unui nou comentariu
+            if (TempData["eroareRatingAdaugat"] != null)
+            {
+                ViewBag.EroareNouRating = true;
+
+                ProdusRating ratingEronatAdaugat = TempData["ratingEronatAdaugat"] as ProdusRating;
+                ViewBag.ratingEronatAdaugare = ratingEronatAdaugat;
+
+                ViewBag.eroare = TempData["eroare"];
+            }  
+            else
+                ViewBag.EroareNouRating = false;
+
+            if (TempData["eroareRatingEditat"] != null)
+            {
+                ViewBag.EroareEditareRating = true;
+
+                ProdusRating ratingEronatEditat = TempData["ratingEronatEditat"] as ProdusRating;
+                ViewBag.ratingEronatEditare = ratingEronatEditat;
+
+                ViewBag.eroare = TempData["eroare"];
+            }
+            else
+                ViewBag.EroareNouRating = false;
 
             if (TempData["mesaj"] != null)
                 ViewBag.mesaj = TempData["mesaj"];
