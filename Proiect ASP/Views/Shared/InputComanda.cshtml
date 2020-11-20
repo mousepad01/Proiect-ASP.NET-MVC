@@ -1,0 +1,9 @@
+﻿@model Proiect_ASP.Models.Comanda
+
+<div class="form-group">
+
+    <label>Selectati adresa</label>
+    @Html.DropDownListFor(m => m.idAdresa, new SelectList(Model.Adrese, "Value", "Text"),
+    "Selectati categoria", new { @class = "form-control" })
+    <br />
+</div>

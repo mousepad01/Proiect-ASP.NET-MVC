@@ -18,5 +18,7 @@ namespace Proiect_ASP.Models
         public DbSet<Produs> Produse { get; set; }
         public DbSet<CategorieProdus> CategoriiProduse { get; set; }
         public DbSet<ProdusRating> ProduseRatinguri { get; set; }
+        public DbSet<Adresa> Adrese { get; set; }
+        public DbSet<Comanda> Comenzi { get; set; }
     }
 }

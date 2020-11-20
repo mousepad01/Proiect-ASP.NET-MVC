@@ -1,20 +1,22 @@
 ﻿
 @{
-    ViewBag.Title = "Afisare";
+    ViewBag.Title = "Afisare categorie";
 }
 
-<h2>@ViewBag.categorie.titlu</h2>
+@model Proiect_ASP.Models.Categorie
+
+<h2>@Model.titlu</h2>
 
 <div class="panel panel-default">
     <div class="panel-body">
-        Descriere: @ViewBag.categorie.descriere
+        Descriere: @Model.descriere
         <br />
     </div>
     <div class="panel panel-footer">
-        <a class="btn btn-info" href="/Categorie/Editare/@ViewBag.categorie.idCategorie" role="button">Editează aceasta categorie</a>
+        <a class="btn btn-info" href="/Categorie/Editare/@Model.idCategorie" role="button">Editează aceasta categorie</a>
         <br />
         <br />
-        <form method="post" action="/Categorie/Stergere/@ViewBag.categorie.idCategorie">
+        <form method="post" action="/Categorie/Stergere/@Model.idCategorie">
             @Html.HttpMethodOverride(HttpVerbs.Delete)
             <button class="btn btn-danger" type="submit">Șterge permanent aceasta categorie</button>
             <br />

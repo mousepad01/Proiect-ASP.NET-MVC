@@ -38,9 +38,8 @@ namespace Proiect_ASP.Controllers
                           select p;
 
             ViewBag.produse = produse;
-            ViewBag.categorie = categorieCautata;
 
-            return View();
+            return View(categorieCautata);
         }
 
         //GET: Afisarea form ului pentru editarea atributelor unei categorii
@@ -67,11 +66,10 @@ namespace Proiect_ASP.Controllers
 
                         return RedirectToAction("Afisare", new { id = id });
                     }
-
                     else
                     {
                         ViewBag.categorie = categorieDeEditat;
-                        return View("EditareNereusita");
+                        return View("FormEditare", categorieActualizata);
                     }
                 }
                 else
@@ -93,7 +91,7 @@ namespace Proiect_ASP.Controllers
         public ActionResult Adaugare()
         {
             Categorie categ = new Categorie();
-            return View("FormAdaugare", categ);
+            return View("FormAdaugare");
         }
 
         [HttpPost]
@@ -106,7 +104,7 @@ namespace Proiect_ASP.Controllers
                     Categorie categorieAdaugata = db.Categorii.Add(categorieDeAdaugat);  // returneaza obiectul adaugat
                     db.SaveChanges();
 
-                    return RedirectToAction("Afisare", new { id = categorieDeAdaugat.idCategorie });
+                    return RedirectToAction("Afisare", new { id = categorieAdaugata.idCategorie });
                 }
                 else
                 {
@@ -141,7 +139,5 @@ namespace Proiect_ASP.Controllers
                 return View("ExceptieStergere");
             }
         }
-        
-   
     }
 }

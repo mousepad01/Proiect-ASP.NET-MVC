@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Afisare categorie";
+}
+
+@model Proiect_ASP.Models.Adresa
+
+<h2>@Model.idAdresa</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        Adresa: @Model.tara, @Model.oras, Str. @Model.strada, Nr. @Model.nr
+        <br />
+    </div>
+    <div class="panel panel-footer">
+        <a class="btn btn-info" href="/Adresa/Editare/@Model.idAdresa" role="button">Editează aceasta adresă</a>
+        <br />
+        <br />
+        <form method="post" action="/Adresa/Stergere/@Model.idAdresa">
+            @Html.HttpMethodOverride(HttpVerbs.Delete)
+            <button class="btn btn-danger" type="submit">Șterge permanent aceasta adresă</button>
+            <br />
+        </form>
+    </div>
+</div>
+<br />

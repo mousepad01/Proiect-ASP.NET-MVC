@@ -1,39 +1,36 @@
 ﻿@model Proiect_ASP.Models.Produs
 
-<div>
-    <p>Toate câmpurile sunt obligatorii</p>
-    <ul>
-        <li>titlul trebuie să conțină între două și 100 de caractere</li>
-        <li>descrierea trebuie să conțină între 10 și 4096 de caractere</li>
-        <li>prețul trebuie să fie cuprins între 0 și 1 miliard</li>
-        <li>cantitatea produsului trebuie să fie cuprinsă între 1 și 1 milion</li>
-    </ul>
-</div>
 <br />
 <div class="form-group">
-    <label>Titlu</label>
-    <input class="form-control" type="text" name="titlu" value="@Model.titlu" />
+    @Html.LabelFor(m => m.titlu, "Titlu - Trebuie să conțină între 2 și 100 de caractere")
+    <br />
     @Html.ValidationMessageFor(m => m.titlu, null, new { @class = "text-danger" })
-</div>
-<br />
-<div class="form-group">
-    <label>Descriere</label>
-    <input class="form-control" type="text" name="descriere" value="@Model.descriere" />
+    <br />
+    @Html.EditorFor(m => m.titlu, new { htmlAttributes = new { @class = "form-control" } })
+    <br /> <br />
+
+    @Html.LabelFor(m => m.descriere, "Titlu - Trebuie să conțină între 2 și 100 de caractere")
+    <br />
     @Html.ValidationMessageFor(m => m.descriere, null, new { @class = "text-danger" })
-</div>
-<br />
-<div class="form-group">
-    <label>Preț</label>
-    <input class="form-control" type="number" name="pret" value="@Model.pret" />
+    <br />
+    @Html.EditorFor(m => m.descriere, new { htmlAttributes = new { @class = "form-control" } })
+    <br /> <br />
+
+    @Html.LabelFor(m => m.pret, "Preț - Trebuie să fie un număr pozitiv mai mic decât un miliard")
+    <br />
     @Html.ValidationMessageFor(m => m.pret, null, new { @class = "text-danger" })
-</div>
-<br />
-<div class="form-group">
-    <label>Cantitate</label>
-    <input class="form-control" type="number" name="cantitate" value="@Model.cantitate" />
+    <br />
+    @Html.EditorFor(m => m.pret, new { htmlAttributes = new { @class = "form-control" } })
+    <br /> <br />
+
+    @Html.LabelFor(m => m.cantitate, "Cantitate - Trebuie să fie un număr mai mare decât 1 și mai mic decât un milion")
+    <br />
     @Html.ValidationMessageFor(m => m.cantitate, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.cantitate, new { htmlAttributes = new { @class = "form-control" } })
+    <br /> <br />
+
 </div>
-<br />
+
 <input class="form-control" type="hidden" name="idOwner" value="@Model.idOwner" />
 @Html.ValidationMessageFor(m => m.idOwner, null, new { @class = "text-danger" })
-<br />
