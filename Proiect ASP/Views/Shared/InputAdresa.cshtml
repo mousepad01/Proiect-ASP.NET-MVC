@@ -1,0 +1,36 @@
+﻿@model Proiect_ASP.Models.Adresa
+
+<div class="form-group">
+
+    @Html.LabelFor(m => m.tara, "Tara - Trebuie să conțină între 2 și 25 de caractere")
+    <br />
+    @Html.ValidationMessageFor(m => m.tara, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.tara, new { htmlAttributes = new { @class = "form-control" } })
+    <br />
+    @Html.LabelFor(m => m.oras, "Oras - Trebuie să conțină între 3 și 100 de caractere")
+    <br />
+    @Html.ValidationMessageFor(m => m.oras, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.oras, new { htmlAttributes = new { @class = "form-control" } })
+    <br />
+    @Html.LabelFor(m => m.strada, "Strada - Trebuie să conțină între 3 și 100 de caractere")
+    <br />
+    @Html.ValidationMessageFor(m => m.strada, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.strada, new { htmlAttributes = new { @class = "form-control" } })
+    <br />
+    @Html.LabelFor(m => m.nr, "Nr. - Trebuie să fie intre 1 și 1000")
+    <br />
+    @Html.ValidationMessageFor(m => m.nr, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.nr, new { htmlAttributes = new { @class = "form-control" } })
+    <br />
+    @Html.LabelFor(m => m.mentiune, "Mentiune despre adresă:")
+    <br />
+    @Html.ValidationMessageFor(m => m.mentiune, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.mentiune, new { htmlAttributes = new { @class = "form-control" } })
+    <br />
+    <br />
+</div>

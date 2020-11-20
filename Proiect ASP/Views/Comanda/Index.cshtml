@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Comenzi";
+}
+
+<h2>@ViewBag.mesaj</h2>
+<h1>Lista completă a comenzilor:</h1>
+<br />
+
+@foreach (var comanda in ViewBag.comenzi)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @comanda.idAdresa
+        </div>
+        <div class="panel-body">
+            Data plasare: @comanda.dataPlasare
+            <br />
+            Data finalizare: @(@comanda.dataFinalizare == null ? "Comanda nefinalizata" : comanda.DataFinalizare)
+            <br />
+        </div>
+        <div class="panel panel-footer">
+            <a class="btn btn-primary" href="/Adresa/Afisare/@comanda.idAdresa">Afișează comanda</a>
+            <br />
+        </div>
+    </div>
+}
+
+<br />
+<a class="btn btn-success" href="/Comanda/Adaugare" role="button">Adaugă o noua comanda</a>

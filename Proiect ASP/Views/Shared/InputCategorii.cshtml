@@ -1,21 +1,17 @@
 ﻿@model Proiect_ASP.Models.Categorie
 
 <div class="form-group">
-    <label>Titlu</label>
-    <input class="form-control" type="text" name="titlu" value="@Model.titlu" />
-    @Html.ValidationMessageFor(m => m.titlu, null, new { @class = "text-danger" })
-</div>
-<br />
-<div class="form-group">
-    <label>Descriere</label>
-    <input class="form-control" type="text" name="descriere" value="@Model.descriere" />
-    @Html.ValidationMessageFor(m => m.descriere, null, new { @class = "text-danger" })
-</div>
 
-<div>
-    <p>Ambele câmpuri sunt obligatorii: </p>
-    <ul>
-        <li>titlul trebuie să conțină între două și 100 de caractere</li>
-        <li>descrierea trebuie să conțină între 10 și 4096 de caractere</li>
-    </ul>
+    @Html.LabelFor(m => m.titlu, "Titlu - Trebuie să conțină între 2 și 100 de caractere")
+    <br />
+    @Html.ValidationMessageFor(m => m.titlu, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.titlu, new { htmlAttributes = new { @class = "form-control" } })
+    <br /> <br />
+    @Html.LabelFor(m => m.descriere, "Descriere - Trebuie să aibă minim 10 caractere și maxim 4096 caractere")
+    <br />
+    @Html.ValidationMessageFor(m => m.descriere, null, new { @class = "text-danger" })
+    <br />
+    @Html.EditorFor(m => m.descriere, new { htmlAttributes = new { @class = "form-control" } })
+    <br /> <br />
 </div>

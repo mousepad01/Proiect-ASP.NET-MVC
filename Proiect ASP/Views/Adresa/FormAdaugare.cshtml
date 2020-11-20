@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "FormAdaugare";
+}
+@model Proiect_ASP.Models.Adresa
+
+<h2>Adaugă o adresă nouă, asta ar trebui să poată face doar un utilizator logat - utilizator normal</h2>
+<br />
+<form method="post" action="/Adresa/Adaugare">
+
+    @Html.Partial("InputAdresa", @Model)
+    <br />
+    <button class="btn btn-success" type="submit">Adaugă noua adresă</button>
+</form>
+
+

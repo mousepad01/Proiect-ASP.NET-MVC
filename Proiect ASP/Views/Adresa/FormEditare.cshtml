@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "FormEditare";
+}
+
+@model Proiect_ASP.Models.Adresa
+
+<h2>Editeaza adresa - asta ar trebui să poată face doar un utilizator logat - utilizator normal</h2>
+
+<form method="post" action="/Adresa/Editare/@Model.idAdresa">
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    <div class="form-group">
+        <label>ID Adresa: @Model.idAdresa</label>
+    </div>
+    @Html.Partial("InputAdresa", @Model)
+    <br />
+    <button class="btn btn-success" type="submit">Salvează modificarile</button>
+</form>
+

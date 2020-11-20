@@ -9,10 +9,17 @@ namespace Proiect_ASP.Controllers
 {
     public class ProdusRatingController : Controller
     {
+        // Ideea lui stefan pentru rating (poti sterge asta dupa ce ai citit): sa avem un singur create per user-produs (un utilizator poate adauga un singur rating pentru fiecare produs)
+        // Asa ca potem face mai simplu ca form-ul primit de utilizatorul U sa fie fie de tip create (in caz ca utilizatorul n-a lasat rating)
+        // Sau de edit in cazul in care utilizatorul U a lasat rating, lasandu-i astfel posibilitatea sa-l modifice
+        // Desi era ft fancy ce ai facut cu jQuery, nu i-am facut front-end pentru ca m-a pierdut putin
+
+        // Also planuiesc sa fac rating-ul cu 5 stelute din front-end (vezi cum are eMag ca sa-ti faci o idee)
         private Models.AppContext db = new Models.AppContext();
 
         // GET : apelat de un script in jQuery, returneaza view ul partial pentru adaugarea unui comentariu nou
         // in aceasta metoda, parametrul ID este AL PRODUSULUI ASOCIAT !!!!!
+        
         public ActionResult AdaugaRating(int id)
         {
             ProdusRating ratingDeAdaugat = new ProdusRating();
@@ -69,13 +76,13 @@ namespace Proiect_ASP.Controllers
 
                 db.SaveChanges();
 
-                TempData["mesaj"] = "Comentariul a fost șters cu succes!";
+                TempData["mesaj"] = "Rating-ul a fost șters cu succes!";
 
                 return Redirect("/Produs/Afisare/" + produsAsociat);
             }
             catch (Exception)
             {
-                TempData["mesaj"] = "Eroare la ștergerea unui comentariu";
+                TempData["mesaj"] = "Eroare la ștergerea unui rating";
                 return Redirect("/Produs/Afisare/" + produsAsociat);
             }
         }

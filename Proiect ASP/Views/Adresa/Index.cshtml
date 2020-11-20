@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Adrese";
+}
+
+<h2>@ViewBag.mesaj</h2>
+<h1>Lista completă a adreselor:</h1>
+<br />
+
+@foreach (var adress in ViewBag.adrese)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @adress.idAdresa
+        </div>
+        <div class="panel-body">
+            Adresa: @adress.tara, @adress.oras, Str. @adress.strada, Nr. @adress.nr
+            <br />
+            <i class="glyphicon glyphicon-user"></i> ID User Asociat: @adress.idUtilizator
+            <br />
+        </div>
+        <div class="panel panel-footer">
+            <a class="btn btn-primary" href="/Adresa/Afisare/@adress.idAdresa">Afișează adresa</a>
+            <br />
+        </div>
+    </div>
+}
+
+<br />
+<a class="btn btn-success" href="/Adresa/Adaugare" role="button">Adaugă o noua adresa</a>
