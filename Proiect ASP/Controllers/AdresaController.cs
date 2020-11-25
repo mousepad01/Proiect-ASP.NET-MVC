@@ -10,7 +10,7 @@ namespace Proiect_ASP.Controllers
     public class AdresaController : Controller
     {
         // IDEE PENTRU ADRESA
-        // Gasisem un API cu toate tarile -> zonele -> orasele din ele pe care-l putem folosi poate sa nu introduca utilizatorul aiurea
+        // Gasisem un API cu toate tarile -> zonele -> orasele din ele pe care-l putem folosi (sa nu introduca utilizatorul aiurea)
         private Models.AppContext db = new Models.AppContext();
 
         // GET: Adresa
@@ -28,10 +28,9 @@ namespace Proiect_ASP.Controllers
         }
 
         /*
-        // Aici ar trebui sa avem una separata cu id ca parametru sa dam doar 
+		Aici ar trebui sa avem un index separat cu id ca parametru sa dam doar 
         adresele unui utilizator (nu ne trebuie toate decat cand avem de-a face cu un admin)
-        dar e ambigous cand incerc sa accesez Index() vs Index(Int)
-        + pana n-avem utilizatori n-are sens sa avem asa ceva oricum, ca altfel o implementam redenumita
+		dar nu avem nevoie atata timp cat nu avem utilizatori
         public ActionResult Index(int i)
         {
             var adrese = from a in db.Adrese

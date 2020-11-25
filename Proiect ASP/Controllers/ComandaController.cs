@@ -10,16 +10,15 @@ namespace Proiect_ASP.Controllers
     public class ComandaController : Controller
     {
         /*
-         * Eu am facut operatiile CRUD normale pe entitatea asta
-         * Dar deoarece sunt inca nesigur de unele idei de implementare 
+         * Eu am facut operatiile CRUD normale pe entitatea asta, dar nu functioneaza deocamdata
+         * Nici nu am terminat-o deoarece sunt inca nesigur de unele idei de implementare
          * Am explicat mai jos ce vreau sa spun, ca ea ar trebui sa aiba operatiile CRUD facute intr-un mod special
          */
         
         private Models.AppContext db = new Models.AppContext();
 
         // GET: Luam toate comenzile - teoretic doar admin-ul ar trebui sa vada asta
-        // Am o problema cu Index(int userId), am patit si la AdresaController.cs, ca user-ul si-ar vedea doar comenzile lui
-        // Bine, pot oricand sa redenumesc metoda, dar asta cand chiar vom implementa useri
+        // Ar trebui si un GET doar pentru un singur user, dar e redundant atunci cand nu avem userii implementati
         public ActionResult Index()
         {
             var comenzi = from a in db.Comenzi
@@ -50,8 +49,7 @@ namespace Proiect_ASP.Controllers
 
             return View("FormEditare", comandaDeEditat);
         }
-
-        // Citeste comentariul de mai sus
+        
         [HttpPut]
         public ActionResult Editare(int id, Comanda comandaActualizata)
         {
@@ -85,7 +83,7 @@ namespace Proiect_ASP.Controllers
             }
         }
 
-        // Adaugarea ar trebui sa fie atunci cand ai plasat comanda. Astfel s-ar sterge produsele din cos (nu stiu deocamdata cum le retinem tbh? trebuie discutat)
+        // Adaugarea ar trebui sa fie atunci cand ai plasat comanda. Astfel s-ar sterge produsele din cos (nu stiu deocamdata cum le retinem, trebuie discutat)
         public ActionResult Adaugare()
         {
             Comanda comanda = new Comanda();
@@ -151,7 +149,7 @@ namespace Proiect_ASP.Controllers
                 selectList.Add(new SelectListItem
                 {
                     Value = adresa.idAdresa.ToString(),
-                    Text = adresa.strada.ToString() // Ar trebui adaugat un titlu al adresei?
+                    Text = adresa.strada.ToString() // Ar trebui adaugat un titlu al adresei pentru a putea fi gasita aici
                 });
             }
 
