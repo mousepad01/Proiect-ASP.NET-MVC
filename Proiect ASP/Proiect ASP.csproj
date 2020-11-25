@@ -127,7 +127,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdresaController.cs" />
     <Compile Include="Controllers\CategorieController.cs" />
+    <Compile Include="Controllers\ComandaController.cs" />
     <Compile Include="Controllers\ProdusController.cs" />
     <Compile Include="Controllers\ProdusRatingController.cs" />
     <Compile Include="Global.asax.cs">
@@ -138,9 +140,11 @@
       <DependentUpon>202010311825255_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Adresa.cs" />
     <Compile Include="Models\AppContext.cs" />
     <Compile Include="Models\Categorie.cs" />
     <Compile Include="Models\CategorieProdus.cs" />
+    <Compile Include="Models\Comanda.cs" />
     <Compile Include="Models\Produs.cs" />
     <Compile Include="Models\ProdusRating.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -181,7 +185,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Categorie\Index.cshtml" />
     <Content Include="Views\Categorie\Afisare.cshtml" />
@@ -204,6 +207,16 @@
     <Content Include="Views\Shared\InputProdus.cshtml" />
     <Content Include="Views\Shared\InputRating.cshtml" />
     <Content Include="Views\Shared\EditareRating.cshtml" />
+    <Content Include="Views\Adresa\Afisare.cshtml" />
+    <Content Include="Views\Adresa\Index.cshtml" />
+    <Content Include="Views\Adresa\FormAdaugare.cshtml" />
+    <Content Include="Views\Shared\InputAdresa.cshtml" />
+    <Content Include="Views\Adresa\FormEditare.cshtml" />
+    <Content Include="Views\Comanda\Afisare.cshtml" />
+    <Content Include="Views\Comanda\FormAdaugare.cshtml" />
+    <Content Include="Views\Comanda\FormEditare.cshtml" />
+    <Content Include="Views\Comanda\Index.cshtml" />
+    <Content Include="Views\Shared\InputComanda.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202010311825255_Initial.resx">
